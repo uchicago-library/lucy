@@ -88,7 +88,9 @@ class Drills:
         self.tree = tree
 
     def as_list(self):
-        """ [
+        """ 
+            returns:
+                e.g., [
                 {
                     'description': 'What would you say?',
                     'translations': [
@@ -110,12 +112,9 @@ class Drills:
         for section in self.tree.findall('.//discourseHierarchy/section'):
             value = section.find('properties/property/property/value')
             if value.text == 'Drill':
-                transcriptions = []
-                for transcription in section.findall('section/section/transcription/content'):
-                    transcriptions.append(transcription.text)
                 drills.append({
                     'description': section.find('description').text,
-                    'transcriptions': self.get_transcriptions(section)
+                    'translations': self.get_translations(section)
                 })
         return drills
 
@@ -124,7 +123,8 @@ class Drills:
         for translation in section.findall('section'):
             translations.append({
                 'translation': translation.find('translation/content').text,
-                'transcriptions': get_transcriptions(translation)
+                #'transcriptions': self.get_transcriptions(translation)
+                'transcriptions': []
             })
         return translations
 
