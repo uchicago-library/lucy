@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block content %}
+
+  <ul id="basic_sentences_controls">
+    <li><a href="#">Play All</a></li>
+    <li><a href="#">Pause/Resume</a></li>
+    <li>Toggle Breakdowns <a class="button" href="#" id="toggle_all_breakdowns"><span>▲</span></a></li>
+    <li>Toggle Transcriptions <a class="button" href="#" id="toggle_all_transcriptions"><span>▼</span></a></li>
+  </ul>
+  
+  <table id="basic_sentences">
+    <tr>
+      <th class="abbreviation"></th>
+      <th class="header">Character</th>
+      <th class="header">English <a href="#" id="show_all_translations">Show</a> <a href="#" id="hide_all_translations">Hide</a></th>
+      <th class="header">Maya <a href="#" id="show_all_transcriptions">Show</a> <a href="#" id="hide_all_transcriptions">Hide</a></th>
+      <th></th>
+      <th></th>
+    </tr>
+    {% for sentence in basic_sentences %}
+      {% for b in sentence.breakdowns %}
+        <tr class="breakdown">
+          <td class="abbreviation">{{ sentence.abbreviation }}.{{ loop.index }}</td>
+          <td></td>
+          <td class="translation"><a class="playable" href="/audio/1.1_0.23.50_0.24.50.mp3">{{ b.translation }}</a></td>
+          <td class="transcription"><a class="playable" href="/audio/1.1_0.23.50_0.24.50.mp3">{{ b.transcription }}</a></td>
+          <td></td>
+          <td></td>
+        </tr>
+      {% endfor %}
+      <tr class="basic_sentence"> 
+        <td class="abbreviation">{{ sentence.abbreviation }}</td>
+        <td>{{ sentence.speaker }}</td>
+        <td class="translation"><a class="playable" href="/audio/1.1_0.23.50_0.24.50.mp3">{{ sentence.translation }}</a></td>
+        <td class="transcription"><a class="playable" href="/audio/1.1_0.23.50_0.24.50.mp3">{{ sentence.transcription }}</a></td>
+        <td><a class="toggle_breakdowns" href="#">▲</a></td>
+        <td><a class="toggle_alternate_transcriptions" href="#">▼</a></td>
+      </tr>
+      {% for a in sentence.alternate_transcriptions %}
+        <tr class="alternate_transcription">
+          <td class="abbreviation"></td>
+          <td></td>
+          <td class="translation"></td>
+          <td class="transcription">{{ a }}</td>
+          <td></td>
+          <td></td>
+        </tr>
+      {% endfor %}
+    {% endfor %}
+  </table>
+{% endblock %}

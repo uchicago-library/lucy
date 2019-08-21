@@ -1,0 +1,67 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" 
+  "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" >
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Main | Digital Maya</title>
+<link rel="stylesheet" type="text/css" href="/css/lucy.css" />
+<script type="text/javascript">
+var head = document.head;
+var link = document.createElement('link');
+link.type = 'text/css';
+link.rel = 'stylesheet';
+link.href = '/css/lucy_js.css';
+head.appendChild(link);
+</script>
+</head>
+<body class="un_fouc">
+<div id="wrapper">
+<div id="header">
+  <h1><a href = "index.html">Spoken Yucatec Maya</a></h1>
+</div>
+
+<div id="content">
+<div id="sidebar">
+<h2>Lesson Navigation</h2>
+
+<ul>
+  <li><a href="/">Front Matter</a></li>
+  {% for u in uuids %}
+    <li><a href="#">Lesson {{ loop.index }}</a><span>▶</span>
+      <ul>
+        <li><a href="/?uuid={{ u }}&amp;section=1">Basic Sentences{% if loop.index % 6 == 0 %} Review{% endif %}</a></li>
+        <li><a href="/?uuid={{ u }}&amp;section=2">Pronunciation</a></li>
+        <li><a href="/?uuid={{ u }}&amp;section=3">Grammar</a></li>
+        <li><a href="/?uuid={{ u }}&amp;section=4">Drills</a></li>
+        <li><a href="/?uuid={{ u }}&amp;section=5">Listening In</a></li>
+        <li><a href="/?uuid={{ u }}&amp;section=6">Conversation</a></li>
+        <li><a href="/?uuid={{ u }}&amp;section=7">Vocabulary</a></li>
+        <li><a href="/?uuid={{ u }}&amp;section=8">Supplementary Materials</a></li>
+        <li><a href="/?uuid={{ u }}&amp;section=9">Teaching Aids</a></li>
+      </ul>
+    </li>
+  {% endfor %}
+  <li><a href="#">Reference</a>
+    <ul><li><a href="#">Grammar</a></li>
+      <li><a href="#">Lexicon</a></li>
+      <li><a href="#">Blair &amp; Vermont Salas</a></li>
+    </ul>
+  </li>
+  <li><a href="#">Export</a></li>
+</ul>
+  
+</div> <!-- /#sidebar -->
+      
+<div id="main">
+  <h2>{{ title }}</h2>
+  {% block content %}{% endblock %}
+</div> <!-- /#main -->
+</div> <!-- /#content -->
+</div> <!-- /#wrapper -->
+
+<script type="text/javascript" src="/js/jquery-3.4.1.min.js"></script>
+<script type="text/javascript" src="/js/lucy.js"></script>
+
+</body>
+
+</html>

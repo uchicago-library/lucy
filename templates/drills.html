@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block content %}
+  {% for block in blocks %}
+    <div class="section">
+      <div class="content">
+        <h2>{{ block.description }}</h2>
+        <ol>
+          {% for translation in block.translations %}
+            <li>{{ note }}
+              <ol>
+                 {% for transcription in translation.transcriptions %}
+                   <li>{{ transcription }}</li>
+                 {% endfor %}
+              </ol>
+            </li>
+          {% endfor %}
+        </ol>
+      </div>
+    </div>
+  {% endfor %}
+{% endblock %}
