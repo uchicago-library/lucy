@@ -110,7 +110,7 @@ class Drills:
         """
         drills = []
         for section in self.tree.findall('.//discourseHierarchy/section'):
-            value = section.find('properties/property/property/value')
+            value = section.find('./properties/property/property/value')
             if value.text == 'Drill':
                 drills.append({
                     'description': section.find('description').text,
@@ -121,10 +121,13 @@ class Drills:
     def get_translations(self, section):
         translations = []
         for translation in section.findall('section'):
+            try:
+                translation_str = translation.find('./translation/content').text
+            except AttributeError:
+                translation_str = ''
             translations.append({
-                'translation': translation.find('translation/content').text,
-                #'transcriptions': self.get_transcriptions(translation)
-                'transcriptions': []
+                'translation': translation_str,
+                'transcriptions': self.get_transcriptions(translation)
             })
         return translations
 
