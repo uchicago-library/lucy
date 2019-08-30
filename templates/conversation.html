@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block content %}
+  {% for block in blocks %}
+    <div class="section">
+      <div class="index">{{ block.abbreviation }}</div>
+      <div class="content">
+        <p>{{ block.description }}</p>
+      </div>
+    </div>
+  {% endfor %}
+{% endblock %}

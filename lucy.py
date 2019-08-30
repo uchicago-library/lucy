@@ -4,13 +4,22 @@ import sys
 import urllib.request
 import xml.etree.ElementTree as ET
 from flask import Flask, render_template, request
+from xml.sax.saxutils import unescape
 
 app = Flask(__name__)
 
-class BasicSentences:
+class Lucy:
     def __init__(self, tree):
         self.tree = tree
- 
+
+    def get_description(self, section):
+        try:
+            return section.find('description').text
+        except AttributeError:
+            return ''
+    
+
+class BasicSentences(Lucy):
     def as_list(self):
         """
             returns:
@@ -28,8 +37,7 @@ class BasicSentences:
         """
         basic_sentences = []
         for section in self.tree.findall('.//discourseHierarchy/section'):
-            value = section.find('properties/property/property/value')
-            if value.text == 'Sentence':
+            if section.findall('.//property/value[@uuid="8754c696-3359-4ecf-8cf5-7e2d293a26b3"]'):
                 basic_sentences.append({
                     'abbreviation': self.get_abbreviation(section),
                     'alternate_transcriptions': self.get_alternate_transcriptions(section),
@@ -45,7 +53,7 @@ class BasicSentences:
         ab = section.find('identification').find('abbreviation').text
         ab = re.sub('^[^.]*\.', '', ab)
         return '.'.join([s.lstrip('0') for s in ab.split('.')])
-    
+
     def get_speaker(self, section):
         """ speaker """
         for property in section.iter('property'):
@@ -59,34 +67,96 @@ class BasicSentences:
         for s in section.findall('section[@type="phrase"]'):
             breakdown.append(
                 {
-                    'translation': s.find('translation').find('content').text,
-                    'transcription': s.find('transcription').find('content').text,
+                    'translation': self.get_translation(s),
+                    'transcription': self.get_transcription(s)
                 }
             )
         return breakdown
     
     def get_transcription(self, section):
         """ transcription """
-        return section.find('transcription').find('content').text
+        return {
+            'text': section.find('./transcription/content').text,
+            'uuid': section.find('./transcription/links/resource[@type="audio"]').get('uuid')
+
+        }
     
     def get_translation(self, section):
         """ translations """
-        return section.find('translation').find('content').text
+        return {
+            'text': section.find('./translation/content').text,
+            'uuid': section.find('./translation/links/resource[@type="audio"]').get('uuid')
+        }
     
     def get_alternate_transcriptions(self, section):
         """ alternate transcriptions. """
-        transcriptions = [section.find('transcription').find('content').text]
+        transcriptions = [section.find('./transcription/content').text]
         try:
-            transcriptions.append(section.find('transcription').find('content[@lang="pro"]').text)
+            transcriptions.append(section.find('./transcription/content[@lang="pro"]').text)
         except AttributeError:
             pass
         return transcriptions
 
 
-class Drills:
-    def __init__(self, tree):
-        self.tree = tree
+class Pronunciations(Lucy):
+    def as_list(self):
+        pronunciations = []
+        i = 1
+        for section in self.tree.findall('.//discourseHierarchy/section'):
+            if section.findall(".//property/value[@uuid='eb1d9fc2-3c4d-4615-ab8e-3065aacc57f2']"):
+                pronunciations.append({
+                    'abbreviation': '{:02d}'.format(i),
+                    'description': self.get_description(section),
+                    'examples': self.get_examples(section),
+                    'notes': self.get_notes(section),
+                    'uuid': self.get_uuid(section)
+                })
+                i += 1
+        return pronunciations
 
+    def get_examples(self, section):
+        examples = []
+        for property in section.findall('./properties//property'):
+            if property.find('label').get('uuid') == 'ce77fb10-4473-4fe0-a8b1-ee26f0956dab':
+                examples.append(property.find('value').text)
+        return examples
+
+    def get_notes(self, section):
+        notes = []
+        for note in section.findall('./notes/note'):
+            notes.append(note.text)
+        return notes
+
+    def get_uuid(self, section):
+        return section.find('./links/resource[@type="audio"]').get('uuid')
+
+
+class Grammar(Lucy):
+    def as_list(self):
+        grammar_blocks = []
+        for section in self.tree.findall('.//discourseHierarchy/section'):
+            if section.findall('.//property/value[@uuid="fc6b91e0-00f8-4a32-8aed-4934432253de"]'):
+                grammar_blocks.append({
+                    'description': self.get_description(section),
+                    'translation': self.get_translation(section)
+                })
+        return grammar_blocks
+
+    def get_description(self, section):
+        return section.find('./links/resource').text
+
+    def get_translation(self, section):
+        # need to unescape those entities.  
+        try:
+            return re.sub(
+                '<[^>]*>', 
+                '',
+                unescape(section.find('./translation/content').text)
+            )
+        except AttributeError:
+            return ''
+
+class Drills(Lucy):
     def as_list(self):
         """ 
             returns:
@@ -110,8 +180,8 @@ class Drills:
         """
         drills = []
         for section in self.tree.findall('.//discourseHierarchy/section'):
-            value = section.find('./properties/property/property/value')
-            if value.text == 'Drill':
+            # find sections with a property/value of Drill
+            if section.findall(".//property/value[@uuid='0a394087-7e9b-4ad9-a97e-97638008bc97']"):
                 drills.append({
                     'description': section.find('description').text,
                     'translations': self.get_translations(section)
@@ -138,47 +208,43 @@ class Drills:
         return transcriptions
 
 
-class Lesson:
-    def __init__(self, tree, section):
-        self.tree = tree
-        self.section = section
-    
+class ListeningIn(Lucy):
     def as_list(self):
-        """
-            params:
-                tree - an xml.etree.ElementTree
-            returns: 
-                e.g., []
-        """
+        listening_in = []
         i = 1
-        sections = []
-        for section_xml in self.tree.findall('.//discourseHierarchy/section'):
-            value = section_xml.find('properties/property/property/value')
-            if value.text == ('', 'Sentence', 'Pronunciation', 'Grammar', 'Drill')[self.section]:
-                sections.append({
-                    'description': self.get_description(section_xml),
-                    'index': '{:02}'.format(i) if self.section in (2, 5, 6) else None,
-                    'notes': self.get_notes(section_xml),
-                    'properties': self.get_properties(section_xml)
+        for section in self.tree.findall('.//discourseHierarchy/section'):
+            if section.findall('.//property/value[@uuid="72eb5e25-0d76-4b70-9c1f-13717a6f9cc5"]'):
+                listening_in.append({
+                    'abbreviation': '{:02d}'.format(i),
+                    'description': section.find('description').text,
+                    'transcriptions': self.get_transcriptions(section)
                 })
                 i += 1
-        return sections
+        return listening_in
 
-    def get_description(self, section):
-        try:
-            return section.find('.//description').text
-        except AttributeError:
-            return ''
+    def get_transcriptions(self, section):
+        transcriptions = []
+        for transcription in section.findall('./section/transcription'):
+            transcriptions.append({
+                'content': transcription.find('content').text, 
+                'uuid': transcription.find('./links/resource').get('uuid')
+            })
+        return transcriptions
 
-    def get_notes(self, section):
-        return [n.text for n in section.findall('.//note')]
 
-    def get_properties(self, section):
-        return [
-            s.text 
-            for s in section.find('properties').findall('.//string') 
-            if s.text
-        ]
+class Conversation(Lucy):
+    def as_list(self):
+        conversation_blocks = []
+        i = 1
+        for section in self.tree.findall('.//discourseHierarchy/section'):
+            if section.findall('.//property/value[@uuid="c72c2b24-74f2-461a-b4f5-9dae22782da4"]'):
+                conversation_blocks.append({
+                    'abbreviation': '{:02d}'.format(i),
+                    'description': self.get_description(section)
+                })
+                i += 1
+        return conversation_blocks
+
 
 def get_uuids():
     """Get a list of UUIDs for the entire project."""
@@ -193,8 +259,7 @@ def get_uuids():
     return uuids
 
 def get_title(tree, section):
-    # e.g., extract the integer 1 from the string "Lesson 01"
-    lesson_number = int(tree.find('.//ochre/text/identification/label').text.split()[1].lstrip("0"))
+    lesson_number = int(tree.find('.//ochre/text/identification/abbreviation').text)
     return 'Lesson {}: {}'.format(
         lesson_number,
         (
@@ -241,6 +306,20 @@ def lucy():
             title=get_title(ochre_xml, section),
             uuids=get_uuids()
         )
+    elif section == 2:
+        return render_template(
+            'pronunciation.html',
+            blocks=Pronunciations(ochre_xml).as_list(),
+            title=get_title(ochre_xml, section),
+            uuids=get_uuids()
+        )
+    elif section == 3:
+        return render_template(
+            'grammar.html',
+            blocks=Grammar(ochre_xml).as_list(),
+            title=get_title(ochre_xml, section),
+            uuids=get_uuids()
+        )
     elif section == 4:
         return render_template(
             'drills.html',
@@ -248,10 +327,17 @@ def lucy():
             title=get_title(ochre_xml, section),
             uuids=get_uuids()
         )
-    else:
+    elif section == 5:
         return render_template(
-            'lesson_section.html',
-            blocks=Lesson(ochre_xml, section).as_list(),
+            'listening_in.html',
+            blocks=ListeningIn(ochre_xml).as_list(),
+            title=get_title(ochre_xml, section),
+            uuids=get_uuids()
+        )
+    elif section == 6:
+        return render_template(
+            'conversation.html',
+            blocks=Conversation(ochre_xml).as_list(),
             title=get_title(ochre_xml, section),
             uuids=get_uuids()
         )

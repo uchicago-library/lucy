@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+  {% for block in blocks %}
+    <div class="section">
+      <div class="index">{{ block.abbreviation }}</div>
+      <div class="content">
+        <h2>{{ block.description }}</h2>
+        <ul class="listening_in">
+          {% for transcription in block.transcriptions %}
+            <li><a class="playable" href="http://ochre.lib.uchicago.edu/ochre?uuid={{ transcription.uuid }}">{{ transcription.content }}</a></li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  {% endfor %}
+{% endblock %}

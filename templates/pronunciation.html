@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block content %}
+  {% for block in blocks %}
+    <div class="section">
+      <div class="index">{{ block.abbreviation }}</div>
+      <div class="content">
+        <h2>Pronunciation</h2>
+        <ul>
+          {% for note in block.notes %}
+            <li>{{ note }}</li>
+          {% endfor %}
+        </ul>
+        <p>{{ block.description }}</p>
+
+        <p><a class="playable" href="http://ochre.lib.uchicago.edu/ochre?uuid={{ block.uuid }}">Pronunciation exercise number {{ loop.index }}</a></p>
+
+        <ul>
+          {% for example in block.examples %}
+            <li>{{ example }}<li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  {% endfor %}
+{% endblock %}

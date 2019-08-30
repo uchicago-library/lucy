@@ -88,4 +88,11 @@ $(document).ready(function() {
   // have JavaScript turned off. This removes the "flash of unstyled
   // content."
   $('body').removeClass('un_fouc');
+
+  /*
+  var sound = new Howl({
+    src: ['/audio/1.1.mp3']
+  });
+  sound.play();
+  */
 });

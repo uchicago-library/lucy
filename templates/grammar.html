@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block content %}
+  {% for block in blocks %}
+    <div class="section">
+      <div>
+        <h2>{{ block.description }}</h2>
+        <p>{{ block.translation }}</p>
+      </div>
+    </div>
+  {% endfor %}
+{% endblock %}
