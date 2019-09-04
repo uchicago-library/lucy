@@ -138,23 +138,21 @@ class Grammar(Lucy):
             if section.findall('.//property/value[@uuid="fc6b91e0-00f8-4a32-8aed-4934432253de"]'):
                 grammar_blocks.append({
                     'description': self.get_description(section),
-                    'translation': self.get_translation(section)
+                    'content': self.get_content(section)
                 })
         return grammar_blocks
 
     def get_description(self, section):
         return section.find('./links/resource').text
 
-    def get_translation(self, section):
-        # need to unescape those entities.  
-        try:
-            return re.sub(
-                '<[^>]*>', 
-                '',
-                unescape(section.find('./translation/content').text)
+    def get_content(self, section):
+        uuid = section.find('./links/resource').get('uuid')
+        content_xml = ET.ElementTree(
+            file=urllib.request.urlopen(
+                'http://ochre.lib.uchicago.edu/ochre?uuid={}'.format(uuid)
             )
-        except AttributeError:
-            return ''
+        )
+        return content_xml.find('//document').text
 
 class Drills(Lucy):
     def as_list(self):
@@ -248,13 +246,21 @@ class Conversation(Lucy):
 
 class Vocabulary(Lucy):
     def as_list(self):
-        vocabulary_blocks = []
         for section in self.tree.findall('.//discourseHierarchy/section'):
             if section.findall('.//property/value[@uuid="a22fdc12-a968-4da8-b96f-0e48002a8473"]'):
+                return self.get_vocabulary_blocks(section)
+        return []
+
+    def get_vocabulary_blocks(self, section):
+        vocabulary_blocks = []
+        for vocabulary in section.findall('section'):
+            try:
                 vocabulary_blocks.append({
-                    'translation': section.find('./section/translation/content').text,
-                    'transcription': section.find('./section/transcription/content').text
+                    'translation': vocabulary.find('./translation/content').text,
+                    'transcription': vocabulary.find('./transcription/content').text
                 })
+            except AttributeError:
+                pass
         return vocabulary_blocks
 
 

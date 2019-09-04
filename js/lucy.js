@@ -95,30 +95,22 @@ $(document).ready(function() {
   });
   sound.play();
   */
-  /*
-  $('.playable').each(function() {
-    var href = $(this).attr('href').replace('http://', 'https://');
-    console.log(href);
-    $.get(href, function(data) {
-      return;
-      console.log(data);
-      console.log(data.getElementsByTagName('identification')[1].attributes);
-      // xmlns:ino="http://namespaces.softwareag.com/tamino/response2"
-      // xmlns:xql="http://metalab.unc.edu/xql/"
-      // xmlns:xq="http://namespaces.softwareag.com/tamino/XQuery/result"
-      // /ino:response/xq:result/ochre/resource/identification/@iri
-    });
-  });
-  */
 
-  $.get('https://ochre.lib.uchicago.edu/ochre?uuid=93cc3a42-88c9-414f-b263-02c785ab479b', function(data) {
-    console.log('!!!!!!!');
-    console.log(data);
-    console.log($(data).find('identification').attributes['iri'].value);
-    console.log(data.getElementsByTagName('identification')[0].attributes['iri'].value);
-    console.log(data.getElementsByTagName('identification')[1].attributes['iri'].value);
-    console.log(data.getElementsByTagName('identification')[1].attributes.getNamedItem('iri'));
-    // console.log(identifications[1].attributes.getNamedItem('iri'));
-    // console.log(data.getElementsByTagName('identification'));
+  $('.playable').each(function() {
+    var el = $(this);
+    var url = $(this).attr('href').replace('http://', 'https://');
+    $.ajax({
+      dataType: 'text',
+      success: function(data) {
+        try {
+          var arr = data.match(/iri="([^"]*)"/);
+          el.attr('href', arr[1]);
+        } catch (err) {
+          console.log('Unable to locate audio file for the following element:');
+          console.log(el);
+        }
+      },
+      url: url,
+    });
   });
 });
