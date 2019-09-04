@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block content %}
+  <div class="vocabulary">
+    <div><strong><a href="#">Maya</a></strong></div>
+    <div><strong><a href="#">English</a></strong></div>
+    {% for block in blocks %}
+      <div class="vocabulary_transcription">{{ block.transcription }}</div>
+      <div class="vocabulary_translation">{{ block.translation }}</div>
+    {% endfor %}
+  </div>
+{% endblock %}

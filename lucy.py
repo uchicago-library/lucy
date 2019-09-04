@@ -246,6 +246,18 @@ class Conversation(Lucy):
         return conversation_blocks
 
 
+class Vocabulary(Lucy):
+    def as_list(self):
+        vocabulary_blocks = []
+        for section in self.tree.findall('.//discourseHierarchy/section'):
+            if section.findall('.//property/value[@uuid="a22fdc12-a968-4da8-b96f-0e48002a8473"]'):
+                vocabulary_blocks.append({
+                    'translation': section.find('./section/translation/content').text,
+                    'transcription': section.find('./section/transcription/content').text
+                })
+        return vocabulary_blocks
+
+
 def get_uuids():
     """Get a list of UUIDs for the entire project."""
     uuids = []
@@ -341,7 +353,13 @@ def lucy():
             title=get_title(ochre_xml, section),
             uuids=get_uuids()
         )
- 
+    elif section == 7:
+        return render_template(
+            'vocabulary.html',
+            blocks=Vocabulary(ochre_xml).as_list(),
+            title=get_title(ochre_xml, section),
+            uuids=get_uuids()
+        )
 
 if __name__ == "__main__":
     app.run()

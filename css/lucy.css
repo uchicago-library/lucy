@@ -107,6 +107,16 @@ div.section div.content {
   flex-grow: 1;
   padding-top: 3em;
 }
+div.vocabulary {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+div.vocabulary > div {
+  padding: .25em;
+}
+div.vocabulary_transcription {
+  background-color: #f2f2f2;
+}
 h1 {
   font-size: 4.25em;
   font-weight: bold;
