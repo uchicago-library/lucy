@@ -180,10 +180,13 @@ strong {
 }
 table#basic_sentences,
 table.conversation_stimulus,
+table.question_and_answer,
 table.situation_narrative {
   background: white;
   border-collapse: separate;
   border-spacing: 2em;
+  margin-bottom: 1em;
+  margin-top: -2em;
   position: relative;
   width: 100%;
 }
@@ -199,6 +202,7 @@ table#basic_sentences tr.alternate_transcription {
   display: none;
 }
 table.conversation_stimulus thead td,
+table.question_and_answer thead td,
 table.situation_narrative thead td {
   font-weight: bold;
 }

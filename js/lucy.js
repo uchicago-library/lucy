@@ -204,11 +204,11 @@ $(document).ready(function() {
   // buttons.
 
   // onload, hide these elements.
-  $('table.conversation_stimulus td.response, table.situation_narrative td.transcription').css('visibility', 'hidden');
+  $('table.conversation_stimulus td.response, table.question_and_answer td.response, table.situation_narrative td.transcription').css('visibility', 'hidden');
 
   // when the user clicks a "show" link, show (or hide) the appropriate
   // content.
-  $('a.conversation_stimulus_show, a.situation_narrative_show').click(function(e) {
+  $('a.conversation_stimulus_show, a.question_and_answer_show, a.situation_narrative_show').click(function(e) {
     e.preventDefault();
     var td = $(this).closest('tr').find('td').last();
     if (td.css('visibility') == 'hidden') {
@@ -221,20 +221,20 @@ $(document).ready(function() {
   });
 
   // when the user clicks "show all", show everything. 
-  $('a.conversation_stimulus_show_all, a.situation_narrative_show_all').click(function(e) {
+  $('a.conversation_stimulus_show_all, a.question_and_answer_show_all, a.situation_narrative_show_all').click(function(e) {
     e.preventDefault();
     $(this).closest('table').find('tbody').find('tr').each(function() {
       $(this).find('td').last().css('visibility', 'visible');
-      $(this).find('a.conversation_stimulus_show, a.situation_narrative_show').text('hide');
+      $(this).find('a.conversation_stimulus_show, a.question_and_answer_show, a.situation_narrative_show').text('hide');
     });
   });
 
   // when the user clicks "hide all", show everything. 
-  $('a.conversation_stimulus_hide_all, a.situation_narrative_hide_all').click(function(e) {
+  $('a.conversation_stimulus_hide_all, a.question_and_answer_hide_all, a.situation_narrative_hide_all').click(function(e) {
     e.preventDefault();
     $(this).closest('table').find('tbody').find('tr').each(function() {
       $(this).find('td').last().css('visibility', 'hidden');
-      $(this).find('a.conversation_stimulus_show, a.situation_narrative_show').text('show');
+      $(this).find('a.conversation_stimulus_show, a.question_and_answer_show, a.situation_narrative_show').text('show');
     });
   });
 

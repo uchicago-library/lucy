@@ -20,7 +20,7 @@
                 <tr>
                   <td class="prompt"><a class="playable" href="http://ochre.lib.uchicago.edu/ochre?uuid={{ row.prompt.uuid }}">{{ row.prompt.text }}</a></td>
                   <td>{{ row.character }}</td>
-                  <td><a class="conversation_stimulus_show" href="#">show</a></td>
+                  <td class="show_hide"><a class="conversation_stimulus_show" href="#">show</a></td>
                   <td class="response"><a class="playable" href="http://ochre.lib.uchicago.edu/ochre?uuid={{ row.response.uuid }}">{{ row.response.text }}</a></td>
                 </tr>
               {% endfor %}
@@ -40,7 +40,7 @@
               {% for row in block.situation_narrative_content %}
                 <tr>
                   <td class="translation"><a class="playable" href="http://ochre.lib.uchicago.edu/ochre?uuid={{ row.translation.uuid }}">{{ row.translation.text }}</a></td>
-                  <td><a class="situation_narrative_show" href="#">show</a></td>
+                  <td class="show_hide"><a class="situation_narrative_show" href="#">show</a></td>
                   <td class="transcription"><a class="playable" href="http://ochre.lib.uchicago.edu/ochre?uuid={{ row.transcription.uuid }}">{{ row.transcription.text }}</a></td>
                 </tr>
               {% endfor %}
@@ -59,7 +59,7 @@
                 {% for row in block.question_and_answer_content %}
                   <tr>
                     <td class="prompt"><a class="playable" href="http://ochre.lib.uchicago.edu/ochre?uuid={{ row.prompt.uuid }}">{{ row.prompt.text }}</a></td>
-                    <td><a class="question_and_answer_show" href="#">show</a></td>
+                    <td class="show_hide"><a class="question_and_answer_show" href="#">show</a></td>
                     <td class="response"><a class="playable" href="http://ochre.lib.uchicago.edu/ochre?uuid={{ row.response.uuid }}">{{ row.response.text }}</a></td>
                   </tr>
                 {% endfor %}
