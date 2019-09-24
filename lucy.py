@@ -253,9 +253,11 @@ class Conversation(Lucy):
                         'heading': 'Conversation Stimulus'
                     })
                 elif section.findall('.//property/value[@uuid="683d06bb-4064-4e94-8cab-6490276636e0"]'):
+                    question_and_answer_blocks, situation_narrative_blocks = self.get_situation_narrative(section)
                     conversation_blocks.append({
                         'abbreviation': '{:02d}'.format(i),
-                        'content': self.get_situation_narrative(section),
+                        'question_and_answer_content': question_and_answer_blocks,
+                        'situation_narrative_content': situation_narrative_blocks,
                         'heading': 'Situation Narrative'
                     })
                 else:
@@ -305,20 +307,45 @@ class Conversation(Lucy):
                 }
         return {'text': '', 'uuid': '#'}
 
-    def get_questions_and_answers(self, section):
-        # look for sections directly under 'section' for the stuff we need.
-        # 540679da-02c4-45ea-afee-f045dc2724fe
-        return []
-
     def get_situation_narrative(self, section):
-        # look for sections directly under 'section' for the stuff we need.
-        blocks = []
+        question_and_answer_blocks = []
+        situation_narrative_blocks = []
         for subsection in section.findall('section'):
-            blocks.append({
-                'translation': self.get_translation(subsection),
-                'transcription': self.get_transcription(subsection)
-            })
-        return blocks
+            # question and answer
+            if subsection.findall('.//property/value[@uuid="540679da-02c4-45ea-afee-f045dc2724fe"]'):
+                for subsubsection in subsection.findall('section'):
+                    # prompt
+                    if subsubsection.findall('.//property/value[@uuid="4e64b8a2-a91a-48f9-9d5b-eb6259ba7b9b"]'):
+                        question_and_answer_block = {}
+                        try:
+                            question_and_answer_block['prompt'] = {
+                                'text': subsubsection.find('transcription').find('content').text,
+                                'uuid': subsubsection.find('transcription').find('links').find('resource').get('uuid')
+                            }
+                        except AttributeError:
+                            question_and_answer_block['prompt'] = {
+                                'text': '',
+                                'uuid': ''
+                            }
+                    # response
+                    elif subsubsection.findall('.//property/value[@uuid="7697db70-3d11-442c-a17b-11339635f0e8"]'):
+                        try:
+                            question_and_answer_block['response'] = {
+                                'text': subsubsection.find('transcription').find('content').text,
+                                'uuid': subsubsection.find('transcription').find('links').find('resource').get('uuid')
+                            }
+                        except AttributeError:
+                            question_and_answer_block['response'] = {
+                                'text': '',
+                                'uuid': ''
+                            }
+                        question_and_answer_blocks.append(question_and_answer_block)
+            else:
+                situation_narrative_blocks.append({
+                    'translation': self.get_translation(subsection),
+                    'transcription': self.get_transcription(subsection)
+                })
+        return question_and_answer_blocks, situation_narrative_blocks
 
     def get_transcription(self, section):
         try:
