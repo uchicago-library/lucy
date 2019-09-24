@@ -75,11 +75,16 @@ class BasicSentences(Lucy):
     
     def get_transcription(self, section):
         """ transcription """
-        return {
-            'text': section.find('./transcription/content').text,
-            'uuid': section.find('./transcription/links/resource[@type="audio"]').get('uuid')
-
-        }
+        try:
+            return {
+                'text': section.find('./transcription/content').text,
+                'uuid': section.find('./transcription/links/resource[@type="audio"]').get('uuid')
+            }
+        except AttributeError:
+            return {
+                'text': '',
+                'uuid': ''
+            }
     
     def get_translation(self, section):
         """ translations """
@@ -178,7 +183,6 @@ class Drills(Lucy):
         """
         drills = []
         for section in self.tree.findall('.//discourseHierarchy/section'):
-            # find sections with a property/value of Drill
             if section.findall(".//property/value[@uuid='0a394087-7e9b-4ad9-a97e-97638008bc97']"):
                 drills.append({
                     'description': section.find('description').text,
@@ -262,6 +266,24 @@ class Vocabulary(Lucy):
             except AttributeError:
                 pass
         return vocabulary_blocks
+
+
+class SupplementaryMaterials(Lucy):
+    def as_list(self):
+        supplementary_materials = []
+        for section in self.tree.findall('.//discourseHierarchy/section'):
+            if section.findall('.//property/value[@uuid="59bf3d38-4a2c-45c2-a07b-07e61cc71774"]'):
+                pass
+        return supplementary_materials
+
+
+class TeachingAids(Lucy):
+    def as_list(self):
+        teaching_aids = []
+        for section in self.tree.findall('.//discourseHierarchy/section'):
+            if section.findall('.//property/value[@uuid="e03bdf4a-d99d-4fb2-9caa-bf0d5f5d7c26"]'):
+                pass
+        return teaching_aids
 
 
 def get_uuids():
@@ -366,6 +388,21 @@ def lucy():
             title=get_title(ochre_xml, section),
             uuids=get_uuids()
         )
+    elif section == 8:
+        return render_template(
+            'supplementary_materials.html',
+            blocks=SupplementaryMaterials(ochre_xml).as_list(),
+            title=get_title(ochre_xml, section),
+            uuids=get_uuids()
+        )
+    elif section == 9:
+        return render_template(
+            'teaching_aids.html',
+            blocks=TeachingAids(ochre_xml).as_list(),
+            title=get_title(ochre_xml, section),
+            uuids=get_uuids()
+        )
+
 
 if __name__ == "__main__":
     app.run()

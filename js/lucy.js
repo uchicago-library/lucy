@@ -1,10 +1,4 @@
 $(document).ready(function() {
-  // the right arrow doesn't render correctly in Edge. Change it to the
-  // greater than symbol in Edge or IE.
-  if (navigator.appName == 'Microsoft Internet Explorer') {
-    $('#sidebar span').text('>');
-  }
-
   // Set up the mouseover and mouseout events to reveal or hide
   // sub-lessons in the sidebar navigation.
   $('#sidebar li').mouseover(function() {
@@ -16,37 +10,102 @@ $(document).ready(function() {
   });
   $('#sidebar').css('display', 'block');
 
-  // toggle all breakdowns.
+  // Playable sound clips, e.g. in basic sentences sections.
+  $('.playable').each(function() {
+    var el = $(this);
+    var url = $(this).attr('href').replace('http://', 'https://');
+    $.ajax({
+      dataType: 'text',
+      success: function(data) {
+        try {
+          var arr = data.match(/iri="([^"]*)"/);
+          el.attr('href', arr[1]);
+        } catch (err) {
+          console.log('Unable to locate audio file for the following element:');
+          console.log(el);
+        }
+      },
+      url: url,
+    });
+  });
+
+  $('.playable').click(function(e) {
+    e.preventDefault();
+    var el = $(this);
+    if (typeof el.data('sound') === 'undefined') {
+      el.data('sound', new Howl({
+        onend: function() {
+          el.removeClass('paused playing');
+          el.removeData('id sound');
+          el.find('.slider').css('width', '0%');
+        },
+        src: [$(this).attr('href')]
+      }));
+    }
+    if (!el.hasClass('playing')) {
+      el.removeClass('paused').addClass('playing');
+      if (typeof el.data('id') === 'undefined') {
+          /* play from beginning */
+          el.data('id', el.data('sound').play());
+      } else {
+          /* unpause */
+          el.data('sound').play(el.data('id'));
+      }
+    } else {
+      /* pause */
+      el.removeClass('playing').addClass('paused');
+      el.data('sound').pause(el.data('id'));
+    }
+  });
+
+  // add a slider and slider track to all playable links.
+  $('.playable').each(function() {
+    $(this).append('<span class="slider_track"><span class="slider"/></span>');
+  });
+
+  // a function to update the slider position on playable things.
+  function update_slider_positions() {
+    $('.playing').each(function() {
+      var width = $(this).data('sound').seek() / $(this).data('sound').duration() * 100;
+      $(this).find('.slider').css(
+        'width', 
+        width + '%'
+      );
+    });
+  }
+  setInterval(update_slider_positions, 50);
+
+  // basic sentences: toggle all breakdowns.
   $('#toggle_all_breakdowns').click(function(e) {
     e.preventDefault();
     $('.breakdown').toggle();
   });
 
-  // toggle all transcriptions.
+  // basic sentences: toggle all transcriptions.
   $('#toggle_all_transcriptions').click(function(e) {
     e.preventDefault();
     $('.alternate_transcription').toggle();
   });
 
-  // hide all translations.
+  // basic sentences: hide all translations.
   $('#hide_all_translations').click(function(e) {
     e.preventDefault();
     $('.translation').css('visibility', 'hidden');
   });
 
-  // show all translations.
+  // basic sentences: show all translations.
   $('#show_all_translations').click(function(e) {
     e.preventDefault();
     $('.translation').css('visibility', 'visible');
   });
 
-  // hide all transcriptions.
+  // basic sentences: hide all transcriptions.
   $('#hide_all_transcriptions').click(function(e) {
     e.preventDefault();
     $('.transcription').css('visibility', 'hidden');
   });
 
-  // show all transcriptions.
+  // basic sentences: show all transcriptions.
   $('#show_all_transcriptions').click(function(e) {
     e.preventDefault();
     $('.transcription').css('visibility', 'visible');
@@ -72,7 +131,7 @@ $(document).ready(function() {
   }
   $('.toggle_breakdowns').click(toggle_breakdowns);
 
-  // next to the up arrow is a down arrow- this toggles alternate
+  // basic sentences: next to the up arrow is a down arrow- this toggles alternate
   // transcriptions of each sentence. 
   function toggle_alternate_transcriptions(e) {
     e.preventDefault();
@@ -84,33 +143,70 @@ $(document).ready(function() {
   }
   $('.toggle_alternate_transcriptions').click(toggle_alternate_transcriptions);
 
+  // vocabulary: contains column headers labelled "maya" and "english"
+  // for sorting.
+  $('.sort_vocabulary').click(function(e) {
+    e.preventDefault();
+
+    // figure out which column was clicked: Maya or English. 
+    var column = $(this).text();
+    $(this).closest('.vocabulary').data('column', column);
+
+    // figure out if the sort should be ascending or descending. 
+    var sort = '';
+    if ($(this).closest('.vocabulary').data('sort') == undefined) {
+      sort = 'descending';
+    } else if ($(this).closest('.vocabulary').data('sort') == 'descending') {
+      sort = 'ascending';
+    } else {
+      sort = 'descending';
+    }
+    $(this).closest('.vocabulary').data('sort', sort);
+
+    // the first two divs should always be in the same place.
+    // collect all the other divs into a list of two-tuples.
+    var divs = [];
+    for (var i = $('div.vocabulary > div.vocabulary_transcription').length-1; i >= 0; i--) {
+      divs.push([
+        $('div.vocabulary > div.vocabulary_transcription').eq(i).detach(),
+        $('div.vocabulary > div.vocabulary_translation').eq(i).detach()
+      ]);
+    }
+
+    // sort that list: ascending or descending based on the column. 
+    divs.sort(function(a, b) {
+      if (column == 'Maya') {
+        var i = 0;
+      } else {
+        var i = 1;
+      }
+      if (a[i].text().toLowerCase() < b[i].text().toLowerCase()) {
+        return -1;
+      } else if (a[i].text().toLowerCase() > b[i].text().toLowerCase()) {
+        return 1;
+      } else {
+        return 0;
+      }
+    })
+    if (sort == 'descending') {
+      divs.reverse();
+    }
+
+    // re-append the elements. 
+    for (var i=0; i < divs.length; i++) {
+      $('div.vocabulary').append(divs[i][0]);
+      $('div.vocabulary').append(divs[i][1]);
+    }
+  });
+
   // The sidebar is set up to display all sub-lessons to visitors who
   // have JavaScript turned off. This removes the "flash of unstyled
   // content."
   $('body').removeClass('un_fouc');
 
-  /*
-  var sound = new Howl({
-    src: ['/audio/1.1.mp3']
-  });
-  sound.play();
-  */
-
-  $('.playable').each(function() {
-    var el = $(this);
-    var url = $(this).attr('href').replace('http://', 'https://');
-    $.ajax({
-      dataType: 'text',
-      success: function(data) {
-        try {
-          var arr = data.match(/iri="([^"]*)"/);
-          el.attr('href', arr[1]);
-        } catch (err) {
-          console.log('Unable to locate audio file for the following element:');
-          console.log(el);
-        }
-      },
-      url: url,
-    });
-  });
+  // the right arrow doesn't render correctly in Edge. Change it to the
+  // greater than symbol in Edge or IE.
+  if (navigator.appName == 'Microsoft Internet Explorer') {
+    $('#sidebar span').text('>');
+  }
 });

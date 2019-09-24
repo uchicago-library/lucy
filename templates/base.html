@@ -5,6 +5,17 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>Main | Digital Maya</title>
 <link rel="stylesheet" type="text/css" href="/css/lucy.css" />
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-148473682-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-148473682-1');
+</script>
+
 <script type="text/javascript">
 /* Insert JS-specific CSS */
 var head = document.head;
@@ -29,7 +40,7 @@ head.appendChild(link);
 <ul>
   <li><a href="/">Front Matter</a></li>
   {% for u in uuids %}
-    <li><a href="#">Lesson {{ loop.index }}</a><span>▶</span>
+    <li><a href="#">Lesson {{ loop.index }}</a><span class="right_arrow">▶</span>
       <ul>
         <li><a href="/?uuid={{ u }}&amp;section=1">Basic Sentences{% if loop.index % 6 == 0 %} Review{% endif %}</a></li>
         <li><a href="/?uuid={{ u }}&amp;section=2">Pronunciation</a></li>

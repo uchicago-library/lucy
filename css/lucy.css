@@ -76,6 +76,39 @@ a.playable:hover, a.playable:active {
   color: #222;
   text-decoration: none;
 }
+a.playing:link, a.playing:visited, a.playing:hover, a.playing:active {
+  background-color: rgb(102, 153, 204);
+  border-radius: 3px;
+  color: white;
+}
+a.paused:link, a.paused:visited, a.paused:hover, a.paused:active {
+  background-color: rgb(153, 153, 153);
+  border-radius: 3px;
+  color: white;
+}
+span.slider_track {
+  background-color: white;
+  border-radius: 3px;
+  display: none;
+  margin: 3px;
+  overflow: hidden;
+  padding: 3px;
+}
+a.paused span.slider,
+a.paused span.slider_track,
+a.playing span.slider,
+a.playing span.slider_track {
+  display: block;
+}
+a.paused span.slider {
+  background-color: rgb(102, 102, 102);
+}
+span.slider {
+  background-color: rgb(0, 102, 153);
+  border-radius: 2px;
+  height: 6px;
+  width: 0%;
+}
 body {
   background: #fff;
   color: #222;
@@ -234,4 +267,11 @@ ul {
 #sidebar li ul li {
   border-left: none;
   border-right: none;
+}
+
+/* The right arrow character renders strangely in Edge. 
+ * see https://stackoverflow.com/questions/32940965/how-to-target-microsoft-edge-with-css
+ */
+_:-ms-lang(x), span.right_arrow {
+  font-family: "Segoe UI Symbol";
 }
