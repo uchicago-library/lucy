@@ -4,7 +4,50 @@
     <div class="section">
       <div class="index">{{ block.abbreviation }}</div>
       <div class="content">
-        <p>{{ block.description }}</p>
+        <h2>{{ block.heading }}</h2>
+        {% if block.heading == '' %}
+          <p>{{ block.description }}</p>
+        {% elif block.heading == 'Conversation Stimulus' %}
+          <table class="conversation_stimulus">
+            <thead>
+              <tr>
+                <td>Prompt</td>
+                <td>Character</td>
+                <td></td>
+                <td>Response <a class="conversation_stimulus_show_all" href="#">Show All</a> <a class="conversation_stimulus_hide_all" href="#">Hide All</a></td>
+            </thead>
+            <tbody>
+              {% for row in block.content %}
+                <tr>
+                  <td class="prompt"><a class="playable" href="http://ochre.lib.uchicago.edu/ochre?uuid={{ row.prompt.uuid }}">{{ row.prompt.text }}</a></td>
+                  <td>{{ row.character }}</td>
+                  <td><a class="conversation_stimulus_show" href="#">show</a></td>
+                  <td class="response"><a class="playable" href="http://ochre.lib.uchicago.edu/ochre?uuid={{ row.response.uuid }}">{{ row.response.text }}</a></td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        {% elif block.heading == 'Questions & Answers' %}
+          <p>Questions &amp; Answers</p>
+        {% elif block.heading == 'Situation Narrative' %}
+          <table class="situation_narrative">
+            <thead>
+              <tr>
+                <td>English</td>
+                <td></td>
+                <td>Maya <a class="situation_narrative_show_all" href="#">Show All</a> <a class="situation_narrative_hide_all" href="#">Hide All</a></td>
+            </thead>
+            <tbody>
+              {% for row in block.content %}
+                <tr>
+                  <td class="translation"><a class="playable" href="http://ochre.lib.uchicago.edu/ochre?uuid={{ row.translation.uuid }}">{{ row.translation.text }}</a></td>
+                  <td><a class="situation_narrative_show" href="#">show</a></td>
+                  <td class="transcription"><a class="playable" href="http://ochre.lib.uchicago.edu/ochre?uuid={{ row.transcription.uuid }}">{{ row.transcription.text }}</a></td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        {% endif %}
       </div>
     </div>
   {% endfor %}

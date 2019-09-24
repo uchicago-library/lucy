@@ -235,18 +235,114 @@ class ListeningIn(Lucy):
 
 
 class Conversation(Lucy):
+    """
+    Conversation sections have two different formats. See lessons 1-5 for
+    examples of the first, and lessons 6, 12, and 18 for examples of the
+    second.
+    """
+
     def as_list(self):
         conversation_blocks = []
         i = 1
         for section in self.tree.findall('.//discourseHierarchy/section'):
             if section.findall('.//property/value[@uuid="c72c2b24-74f2-461a-b4f5-9dae22782da4"]'):
-                conversation_blocks.append({
-                    'abbreviation': '{:02d}'.format(i),
-                    'description': self.get_description(section)
-                })
+                if section.findall('.//property/value[@uuid="40d5cb3c-b280-4467-8000-947e297a4521"]'):
+                    conversation_blocks.append({
+                        'abbreviation': '{:02d}'.format(i),
+                        'content': self.get_conversation_stimulus(section),
+                        'heading': 'Conversation Stimulus'
+                    })
+                elif section.findall('.//property/value[@uuid="683d06bb-4064-4e94-8cab-6490276636e0"]'):
+                    conversation_blocks.append({
+                        'abbreviation': '{:02d}'.format(i),
+                        'content': self.get_situation_narrative(section),
+                        'heading': 'Situation Narrative'
+                    })
+                else:
+                    conversation_blocks.append({
+                        'abbreviation': '{:02d}'.format(i),
+                        'description': self.get_description(section),
+                        'heading': ''
+                    })
                 i += 1
         return conversation_blocks
 
+    def get_conversation_stimulus(self, section):
+        blocks = []
+        for subsection in section.findall('section'):
+            blocks.append({
+                'character': self.get_character(subsection),
+                'prompt': self.get_prompt(subsection),
+                'response': self.get_response(subsection)
+            })
+        return blocks
+
+    def get_character(self, section):
+        for subsection in section.findall('section'):
+            # response
+            if subsection.findall('.//property/value[@uuid="7697db70-3d11-442c-a17b-11339635f0e8"]'):
+                # speaker
+                for prop in subsection.findall('.//property'):
+                    if prop.find('label').get('uuid') == '9dc5fbbe-b8db-417f-b9d4-68efa3576e80':
+                        return prop.find('value').text
+        return ''
+
+    def get_prompt(self, section):
+        for subsection in section.findall('section'):
+            if subsection.findall('.//property/value[@uuid="4e64b8a2-a91a-48f9-9d5b-eb6259ba7b9b"]'):
+                return {
+                    'text': subsection.find('transcription').find('content').text,
+                    'uuid': subsection.find('transcription').find('links').find('resource').get('uuid')
+                }
+        return {'text': '', 'uuid': '#'}
+
+    def get_response(self, section):
+        for subsection in section.findall('section'):
+            if subsection.findall('.//property/value[@uuid="7697db70-3d11-442c-a17b-11339635f0e8"]'):
+                return {
+                    'text': subsection.find('transcription').find('content').text,
+                    'uuid': subsection.find('transcription').find('links').find('resource').get('uuid')
+                }
+        return {'text': '', 'uuid': '#'}
+
+    def get_questions_and_answers(self, section):
+        # look for sections directly under 'section' for the stuff we need.
+        # 540679da-02c4-45ea-afee-f045dc2724fe
+        return []
+
+    def get_situation_narrative(self, section):
+        # look for sections directly under 'section' for the stuff we need.
+        blocks = []
+        for subsection in section.findall('section'):
+            blocks.append({
+                'translation': self.get_translation(subsection),
+                'transcription': self.get_transcription(subsection)
+            })
+        return blocks
+
+    def get_transcription(self, section):
+        try:
+            return {
+                'text': section.find('./transcription/content').text,
+                'uuid': section.find('./transcription/links/resource[@type="audio"]').get('uuid')
+            }
+        except AttributeError:
+            return {
+                'text': '',
+                'uuid': ''
+            }
+    
+    def get_translation(self, section):
+        try:
+            return {
+                'text': section.find('./translation/content').text,
+                'uuid': section.find('./translation/links/resource[@type="audio"]').get('uuid')
+            }
+        except AttributeError:
+            return {
+                'text': '',
+                'uuid': ''
+            }
 
 class Vocabulary(Lucy):
     def as_list(self):
