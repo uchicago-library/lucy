@@ -81,17 +81,17 @@ class BasicSentences(Lucy):
                 'uuid': section.find('./transcription/links/resource[@type="audio"]').get('uuid')
             }
         except AttributeError:
-            return {
-                'text': '',
-                'uuid': ''
-            }
+            return {'text': '', 'uuid': ''}
     
     def get_translation(self, section):
         """ translations """
-        return {
-            'text': section.find('./translation/content').text,
-            'uuid': section.find('./translation/links/resource[@type="audio"]').get('uuid')
-        }
+        try:
+            return {
+                'text': section.find('./translation/content').text,
+                'uuid': section.find('./translation/links/resource[@type="audio"]').get('uuid')
+            }
+        except AttributeError:
+            return {'text': '', 'uuid': ''}
     
     def get_alternate_transcriptions(self, section):
         """ alternate transcriptions. """
@@ -354,10 +354,7 @@ class Conversation(Lucy):
                 'uuid': section.find('./transcription/links/resource[@type="audio"]').get('uuid')
             }
         except AttributeError:
-            return {
-                'text': '',
-                'uuid': ''
-            }
+            return {'text': '', 'uuid': ''}
     
     def get_translation(self, section):
         try:
@@ -366,10 +363,7 @@ class Conversation(Lucy):
                 'uuid': section.find('./translation/links/resource[@type="audio"]').get('uuid')
             }
         except AttributeError:
-            return {
-                'text': '',
-                'uuid': ''
-            }
+            return {'text': '', 'uuid': ''}
 
 class Vocabulary(Lucy):
     def as_list(self):
@@ -422,9 +416,9 @@ def get_uuids():
     return uuids
 
 def get_title(tree, section):
-    lesson_number = int(tree.find('.//ochre/text/identification/abbreviation').text)
+    """Get section titles."""
     return 'Lesson {}: {}'.format(
-        lesson_number,
+        int(tree.find('.//ochre/text/identification/abbreviation').text),
         (
             'Front Matter',
             'Basic Sentences',
@@ -438,12 +432,6 @@ def get_title(tree, section):
             'Teaching Aids'
         )[section]
     )
-
-def get_lesson_index(data, uuid):
-    for i, record in enumerate(data):
-        if record['uuid'] == uuid:
-            return i + 1
-    raise ValueError
 
 @app.route("/")
 def lucy():

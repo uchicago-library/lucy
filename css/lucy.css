@@ -61,6 +61,18 @@ a:link, a:visited {
 a:hover, a:active {
   text-decoration: underline;
 }
+a.conversation_stimulus_hide_all,
+a.conversation_stimulus_show_all,
+a.question_and_answer_hide_all,
+a.question_and_answer_show_all,
+a.situation_narrative_hide_all,
+a.situation_narrative_show_all,
+a#hide_all_translations,
+a#hide_all_transcriptions,
+a#show_all_translations,
+a#show_all_transcriptions {
+  padding-left: 1em;
+}
 a.playable {
   display: block;
   margin: -3px -6px;
@@ -86,14 +98,6 @@ a.paused:link, a.paused:visited, a.paused:hover, a.paused:active {
   border-radius: 3px;
   color: white;
 }
-span.slider_track {
-  background-color: white;
-  border-radius: 3px;
-  display: none;
-  margin: 3px;
-  overflow: hidden;
-  padding: 3px;
-}
 a.paused span.slider,
 a.paused span.slider_track,
 a.playing span.slider,
@@ -102,12 +106,6 @@ a.playing span.slider_track {
 }
 a.paused span.slider {
   background-color: rgb(102, 102, 102);
-}
-span.slider {
-  background-color: rgb(0, 102, 153);
-  border-radius: 2px;
-  height: 6px;
-  width: 0%;
 }
 body {
   background: #fff;
@@ -118,6 +116,22 @@ body {
   margin: 0 auto;
   padding: 0;
   width: 950px;
+}
+div.conversation_stimulus {
+  display: grid;
+  grid-gap: 2em;
+  grid-template-columns: 1fr max-content 2.5em 1fr;
+}
+div.header {
+  font-weight: bold;
+}
+div.question_and_answer,
+div.situation_narrative {
+  display: grid;
+  grid-gap: 2em;
+  grid-template-columns: 1fr 2.5em 1fr;
+  margin-bottom: 2em;
+  margin-top: -1em;
 }
 div.section {
   border: 2px solid #f2f2f2;
@@ -138,7 +152,6 @@ div.section div.index {
 }
 div.section div.content {
   flex-grow: 1;
-  padding-top: 3em;
 }
 div.vocabulary {
   display: grid;
@@ -168,20 +181,29 @@ h2 {
 }
 ol {
   margin-bottom: 1em;
-}
-ul.listening_in li {
-  margin-bottom: 2em;
+  padding-left: 2em;
 }
 p {
   margin-bottom: 1em;
 }
+span.slider {
+  background-color: rgb(0, 102, 153);
+  border-radius: 2px;
+  height: 6px;
+  width: 0%;
+}
+span.slider_track {
+  background-color: white;
+  border-radius: 3px;
+  display: none;
+  margin: 3px;
+  overflow: hidden;
+  padding: 3px;
+}
 strong {
   font-weight: bold;
 }
-table#basic_sentences,
-table.conversation_stimulus,
-table.question_and_answer,
-table.situation_narrative {
+table#basic_sentences {
   background: white;
   border-collapse: separate;
   border-spacing: 2em;
@@ -201,13 +223,11 @@ table#basic_sentences tr.breakdown,
 table#basic_sentences tr.alternate_transcription {
   display: none;
 }
-table.conversation_stimulus thead td,
-table.question_and_answer thead td,
-table.situation_narrative thead td {
-  font-weight: bold;
-}
 ul {
   margin-bottom: 1em;
+}
+ul.listening_in li {
+  margin-bottom: 2em;
 }
 #basic_sentences_controls {
   margin: 1em 0 3em 0;
@@ -279,7 +299,7 @@ ul {
   border-right: none;
 }
 
-/* The right arrow character renders strangely in Edge. 
+/* The right arrow character that we use in the sidebar navigation renders strangely in Edge. 
  * see https://stackoverflow.com/questions/32940965/how-to-target-microsoft-edge-with-css
  */
 _:-ms-lang(x), span.right_arrow {
