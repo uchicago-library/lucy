@@ -10,6 +10,28 @@ $(document).ready(function() {
   });
   $('#sidebar').css('display', 'block');
 
+  // Play All, Pause/Resume
+  var playing_all = false;
+  $('#basic_sentences_play_all').click(function(e) {
+    e.preventDefault();
+    /*
+    play_all = true;
+    console.log('1');
+    if ($('.playing').length == 0) {
+      console.log('2');
+      $('.playable').first().click();
+    }
+    */
+  });
+  $('#basic_sentences_pause_resume').click(function(e) {
+    e.preventDefault();
+    /*
+    play_all = false;
+    $('.playing').click();
+    */
+  });
+
+
   // Playable sound clips, e.g. in basic sentences sections.
   $('.playable').each(function() {
     var el = $(this);
@@ -38,6 +60,16 @@ $(document).ready(function() {
           el.removeClass('paused playing');
           el.removeData('id sound');
           el.find('.slider').css('width', '0%');
+          if (playing_all) {
+            var els = $('.playable');
+            for (var i = 0; i < els.length; i++) {
+              if (els[i] == el) {
+                if (i < els.length - 1) {
+                  els[i+1].click();
+                }
+              }
+            }
+          }
         },
         src: [$(this).attr('href')]
       }));
