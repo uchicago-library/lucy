@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import json
 import re
 import sys
@@ -87,7 +89,7 @@ class BasicSentences(Lucy):
         """ transcription """
         try:
             return {
-                'text': section.find('./transcription/content').text,
+                'text': get_xml_contents(section.find('./transcription/content')),
                 'uuid': section.find('./transcription/links/resource[@type="audio"]').get('uuid')
             }
         except AttributeError:
@@ -97,7 +99,7 @@ class BasicSentences(Lucy):
         """ translations """
         try:
             return {
-                'text': section.find('./translation/content').text,
+                'text': get_xml_contents(section.find('./translation/content')),
                 'uuid': section.find('./translation/links/resource[@type="audio"]').get('uuid')
             }
         except AttributeError:
@@ -105,11 +107,12 @@ class BasicSentences(Lucy):
     
     def get_alternate_transcriptions(self, section):
         """ alternate transcriptions. """
-        transcriptions = [section.find('./transcription/content').text]
-        try:
-            transcriptions.append(section.find('./transcription/content[@lang="pro"]').text)
-        except AttributeError:
-            pass
+        transcriptions = []
+        for a in ('sup', 'pro'):
+            try:
+                transcriptions.append(get_xml_contents(section.find('./transcription/content[@lang="' + a + '"]')))
+            except AttributeError:
+                pass
         return transcriptions
 
 

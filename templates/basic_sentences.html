@@ -22,8 +22,8 @@
         <tr class="breakdown">
           <td class="abbreviation">{{ sentence.abbreviation }}.{{ loop.index }}</td>
           <td></td>
-          <td class="translation"><a class="playable" href="http://ochre.lib.uchicago.edu/ochre?uuid={{ b.translation.uuid }}">{{ b.translation.text }}</a></td>
-          <td class="transcription"><a class="playable" href="http://ochre.lib.uchicago.edu/ochre?uuid={{ b.transcription.uuid }}">{{ b.transcription.text }}</a></td>
+          <td class="translation"><a class="playable" href="http://ochre.lib.uchicago.edu/ochre?uuid={{ b.translation.uuid }}">{{ b.translation.text | safe }}</a></td>
+          <td class="transcription"><a class="playable" href="http://ochre.lib.uchicago.edu/ochre?uuid={{ b.transcription.uuid }}">{{ b.transcription.text | safe }}</a></td>
           <td></td>
           <td></td>
         </tr>
@@ -31,8 +31,8 @@
       <tr class="basic_sentence"> 
         <td class="abbreviation">{{ sentence.abbreviation }}</td>
         <td>{{ sentence.speaker }}</td>
-        <td class="translation"><a class="playable" href="http://ochre.lib.uchicago.edu/ochre?uuid={{ sentence.translation.uuid }}">{{ sentence.translation.text }}</a></td>
-        <td class="transcription"><a class="playable" href="http://ochre.lib.uchicago.edu/ochre?uuid={{ sentence.transcription.uuid }}">{{ sentence.transcription.text }}</a></td>
+        <td class="translation"><a class="playable" href="http://ochre.lib.uchicago.edu/ochre?uuid={{ sentence.translation.uuid }}">{{ sentence.translation.text | safe }}</a></td>
+        <td class="transcription"><a class="playable" href="http://ochre.lib.uchicago.edu/ochre?uuid={{ sentence.transcription.uuid }}">{{ sentence.transcription.text | safe }}</a></td>
         <td><a class="toggle_breakdowns" href="#">▲</a></td>
         <td><a class="toggle_alternate_transcriptions" href="#">▼</a></td>
       </tr>
@@ -41,7 +41,7 @@
           <td class="abbreviation"></td>
           <td></td>
           <td class="translation"></td>
-          <td class="transcription">{{ a }}</td>
+          <td class="transcription">{{ a | safe }}</td>
           <td></td>
           <td></td>
         </tr>
