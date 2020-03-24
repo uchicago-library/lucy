@@ -8,6 +8,16 @@ from xml.sax.saxutils import unescape
 
 app = Flask(__name__)
 
+def get_xml_contents(e):
+    """Get the contents of a node as a string of text and XML 
+       child nodes: e.g, in a <p>, get all of the <em> and 
+       <strong> elements, but not the <p> and </p> themselves.
+    """
+    e_str = ET.tostring(e).decode('utf-8')
+    opening_indices = [i for i, c in enumerate(e_str) if c == '<']
+    closing_indices = [i for i, c in enumerate(e_str) if c == '>']
+    return e_str[closing_indices[0]+1:opening_indices[-1]]
+
 class Lucy:
     def __init__(self, tree):
         self.tree = tree
