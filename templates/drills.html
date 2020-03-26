@@ -3,18 +3,37 @@
   {% for block in blocks %}
     <div class="section">
       <div class="content">
-        <h2>{{ block.description }}</h2>
-        <ol style="list-style: decimal;">
-          {% for translation in block.translations %}
-            <li>{{ translation.translation }}
-              <ol style="list-style-type: lower-alpha;" type="a">
-                 {% for transcription in translation.transcriptions %}
-                   <li>{{ transcription }}</li>
-                 {% endfor %}
-              </ol>
-            </li>
-          {% endfor %}
-        </ol>
+        {% if 'translations' in block %}
+          <h2>{{ block.description }}</h2>
+          <ol style="list-style: decimal;">
+            {% for translation in block.translations %}
+              <li>{{ translation.translation }}
+                <ol style="list-style-type: lower-alpha;" type="a">
+                   {% for transcription in translation.transcriptions %}
+                     <li>{{ transcription }}</li>
+                   {% endfor %}
+                </ol>
+              </li>
+            {% endfor %}
+          </ol>
+        {% else %}
+          <h2>{{ block.description }}</h2>
+          <div class="drill_content">
+            {% for drill in block.drills %}
+              <div>{{ loop.index }}.</div>
+              {% if 'uuid' in drill[0] %}
+                <div><a class="playable" href="http://ochre.lib.uchicago.edu/ochre?uuid={{ drill[0].uuid }}">{{ drill[0].text }}</a></div>
+              {% else %}
+                <div>{{ drill[0].text }}</div>
+              {% endif %}
+              {% if 'uuid' in drill[1] %}
+                <div><a class="playable" href="http://ochre.lib.uchicago.edu/ochre?uuid={{ drill[1].uuid }}">{{ drill[1].text }}</a></div>
+              {% else %}
+                <div>{{ drill[1].text }}</div>
+              {% endif %}
+            {% endfor %}
+          </div>
+        {% endif %}
       </div>
     </div>
   {% endfor %}

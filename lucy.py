@@ -190,6 +190,20 @@ class Drills(Lucy):
                         }
                         ...
                     ]
+                },
+                {
+                    'description': 'Variation Drills',
+                    'drills': [
+                        {
+                            'text': '...',
+                            'uuid': '...'
+                        },
+                        {
+                            'text': '...',
+                            'uuid': '...'
+                        }
+                        ...
+                    ]
                 }
                 ...
             ]
@@ -197,10 +211,43 @@ class Drills(Lucy):
         drills = []
         for section in self.tree.findall('.//discourseHierarchy/section'):
             if section.findall(".//property/value[@uuid='0a394087-7e9b-4ad9-a97e-97638008bc97']"):
-                drills.append({
-                    'description': section.find('description').text,
-                    'translations': self.get_translations(section)
-                })
+                description = section.find('description').text
+                if section.findall(".//section/transcription/links/resource"):
+                    drills.append({
+                        'description': description,
+                        'drills': self.get_drills(section)
+                    })
+                else:
+                    drills.append({
+                        'description': description,
+                        'translations': self.get_translations(section)
+                    })
+        return drills
+
+    def get_drills(self, section):
+        drills = []
+        for s in section.findall('section'):
+            column1 = {}
+            try:
+                column1['text'] = s.findall('section')[0].find('transcription').find('content').text
+            except AttributeError:
+                column1['text'] = ''
+            try:
+                column1['uuid'] = s.findall('section')[0].find('transcription').find('links').find('resource').get('uuid')
+            except AttributeError:
+                pass
+
+            column2 = {}
+            try:
+                column2['text'] = s.findall('section')[1].find('transcription').find('content').text
+            except AttributeError:
+                column2['text'] = ''
+            try:
+                column2['uuid'] = s.findall('section')[1].find('transcription').find('links').find('resource').get('uuid')
+            except AttributeError:
+                pass
+     
+            drills.append([column1, column2])
         return drills
 
     def get_translations(self, section):
