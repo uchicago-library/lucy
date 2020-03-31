@@ -51,6 +51,9 @@ $(document).ready(function() {
     });
   });
 
+  // Show/Hide content in drills
+  $('.show_hide_content').style('visibility', 'hidden');
+
   $('.playable').click(function(e) {
     e.preventDefault();
     var el = $(this);

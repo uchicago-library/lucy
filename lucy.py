@@ -212,20 +212,27 @@ class Drills(Lucy):
         for section in self.tree.findall('.//discourseHierarchy/section'):
             if section.findall(".//property/value[@uuid='0a394087-7e9b-4ad9-a97e-97638008bc97']"):
                 description = section.find('description').text
+                type_d = bool(section.findall(".//property/value[@uuid='c9a8b59e-a79b-4585-b5c3-1f9c3aa37087']"))
+                t = ''
+                if type_d:
+                    t = 'D'
                 if section.findall(".//section/transcription/links/resource"):
                     drills.append({
                         'description': description,
-                        'drills': self.get_drills(section)
+                        'drills': self.get_drills(section),
+                        'type': t
                     })
                 else:
                     drills.append({
                         'description': description,
-                        'translations': self.get_translations(section)
+                        'translations': self.get_translations(section),
+                        'type': t
                     })
         return drills
 
     def get_drills(self, section):
         drills = []
+
         for s in section.findall('section'):
             column1 = {}
             try:

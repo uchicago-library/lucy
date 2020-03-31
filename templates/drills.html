@@ -16,6 +16,24 @@
               </li>
             {% endfor %}
           </ol>
+        {% elif block.type == 'D' %}
+          <h2>{{ block.description }}</h2>
+          <div class="drill_type_d_content">
+            {% for drill in block.drills %}
+              <div>{{ loop.index }}.</div>
+              {% if 'uuid' in drill[0] %}
+                <div><a class="playable" href="http://ochre.lib.uchicago.edu/ochre?uuid={{ drill[0].uuid }}">{{ drill[0].text }}</a></div>
+              {% else %}
+                <div>{{ drill[0].text }}</div>
+              {% endif %}
+              {% if 'uuid' in drill[1] %}
+                <div class="show_hide_content"><a class="playable" href="http://ochre.lib.uchicago.edu/ochre?uuid={{ drill[1].uuid }}">{{ drill[1].text }}</a></div>
+              {% else %}
+                <div class="show_hide_content">{{ drill[1].text }}</div>
+              {% endif %}
+              <div><a class="show_hide_link" href="#">show/hide answer</a></div>
+            {% endfor %}
+          </div>
         {% else %}
           <h2>{{ block.description }}</h2>
           <div class="drill_content">
