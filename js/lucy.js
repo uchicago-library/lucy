@@ -52,7 +52,7 @@ $(document).ready(function() {
   });
 
   // Show/Hide content in drills
-  $('.show_hide_content').style('visibility', 'hidden');
+  $('.show_hide_content').css('visibility', 'hidden');
 
   $('.playable').click(function(e) {
     e.preventDefault();
@@ -177,6 +177,17 @@ $(document).ready(function() {
     }
   }
   $('.toggle_alternate_transcriptions').click(toggle_alternate_transcriptions);
+
+  // drills: show/hide content
+  $('.show_hide_link').click(function(e) {
+     e.preventDefault();
+     var d = $(e.target).parent().prev('.show_hide_content');
+     if ($(d).css('visibility') == 'hidden') {
+         $(d).css('visibility', 'visible');
+     } else {
+         $(d).css('visibility', 'hidden');
+     }
+  });
 
   // vocabulary: contains column headers labelled "maya" and "english"
   // for sorting.
