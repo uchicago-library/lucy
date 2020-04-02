@@ -212,10 +212,11 @@ class Drills(Lucy):
         for section in self.tree.findall('.//discourseHierarchy/section'):
             if section.findall(".//property/value[@uuid='0a394087-7e9b-4ad9-a97e-97638008bc97']"):
                 description = section.find('description').text
-                type_d = bool(section.findall(".//property/value[@uuid='c9a8b59e-a79b-4585-b5c3-1f9c3aa37087']"))
+                # type G drills contain a "show/hide content" link. 
+                type_g = bool(section.findall(".//property/value[@uuid='071132e4-6159-48b7-b0a9-b8361f9424b5']"))
                 t = ''
-                if type_d:
-                    t = 'D'
+                if type_g:
+                    t = 'G'
                 if section.findall(".//section/transcription/links/resource"):
                     drills.append({
                         'description': description,
