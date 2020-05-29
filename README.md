@@ -11,10 +11,10 @@ The recordings themselves are valuable documents. Manuel J. Andrade was an anthr
 Fast-forwarding to 2005 brings us to the initial website for this project, when Professors John Lucy and John Goldsmith led a project to digitize this material and to develop metadata to describe them. In 2007 John Lucy led a project to create the initial web-based language instruction course based on this material which is now used by multiple universities. 
 
 ## This iteration of the site
-Last year OCHRE data services loaded the sound clips and their associated metadata into OCHRE. My task was to duplicate the 2007 website, but with a more modern web framework. Because OCHRE reveals its data as XML, you have lots of choices for languages and frameworks for a frontend. I chose the Python language and the [Flask](https://flask.palletsprojects.com/en/1.1.x/) framework because it's lightweight and quick for development. The following instructions were tested on a Mac- if you're working with a different OS you will have to modify them for your machine.
+Last year OCHRE data services loaded the sound clips and their associated metadata into OCHRE. My task was to duplicate the 2007 website, but with a more modern web framework. Because OCHRE reveals its data as XML, you have lots of choices for languages and frameworks for a frontend. I chose the Python language and the [Flask](https://flask.palletsprojects.com/en/1.1.x/) framework because it's lightweight and quick for development. The following instructions were tested on a Mac&mdash;if you're working with a different OS you will have to modify them for your machine.
 
 ## Getting started with OCHRE data
-Next lets start to work with OCHRE. Data is organized in OCHRE by uuid- you'll need to refer to the OCHRE backend to get a UUID to start with, but since I know one already you can use the following command in the terminal to see what data is associated with it:
+Next lets start to work with OCHRE. Data is organized in OCHRE by uuid&mdash;you'll need to refer to the OCHRE backend to get a UUID to start with, but since I know one already you can use the following command in the terminal to see what data is associated with it:
 
 ```console
 $ curl http://ochre.lib.uchicago.edu/ochre?uuid=0ad43a89-09d6-4292-88cb-b6fd6dfe41e5 | xmllint --format - | less
@@ -180,7 +180,7 @@ Now run a development version of your new Flask app like this:
 $ python minimal.py
 ```
 
-Flask's development server will then start serving your Flask site on localhost at (http://localhost:5000/)[http://localhost:5000/]. Flask will warn you that it's running a server meant for development only- later on we'll set up a simple WGSI server so you can get a bit closer to what this will look like in  a production environment. Opening this URL in your browser should show a plain text message, "Hello from Flask."
+Flask's development server will then start serving your Flask site on localhost at (http://localhost:5000/)[http://localhost:5000/]. Flask will warn you that it's running a server meant for development only&mdash;later on we'll set up a simple WGSI server so you can get a bit closer to what this will look like in  a production environment. Opening this URL in your browser should show a plain text message, "Hello from Flask."
 
 Lets extend that so it can return our screenplay-formatted text.
 
@@ -229,7 +229,7 @@ if __name__=='__main__':
 
 This should return the correct text to your browser, but without the right newlines or anything like that. Lets add templates so that we can return something more nicely formatted. 
 
-Finally, lets add templates to return this as HTML. Instead of sending a mass of text to the templates, we'll start by making a data structure to send. Instead of joining my sections list into a single string, I'll set each item in the list to it's own python dictionary with three keys- speaker, translation, and transcription. Then I'll loop over them in the  template to display them properly. 
+Finally, lets add templates to return this as HTML. Instead of sending a mass of text to the templates, we'll start by making a data structure to send. Instead of joining my sections list into a single string, I'll set each item in the list to it's own python dictionary with three keys&mdash;speaker, translation, and transcription. Then I'll loop over them in the  template to display them properly. 
 
 Modify your main.py so it looks like this:
 
