@@ -14,7 +14,7 @@ Fast-forwarding to 2005 brings us to the initial website for this project, when 
 Last year OCHRE data services loaded the sound clips and their associated metadata into OCHRE. My task was to duplicate the 2007 website, but with a more modern web framework. Because OCHRE reveals its data as XML, you have lots of choices for languages and frameworks for a frontend. I chose the Python language and the [Flask](https://flask.palletsprojects.com/en/1.1.x/) framework because it's lightweight and quick for development. The following instructions were tested on a Mac- if you're working with a different OS you will have to modify them for your machine.
 
 ## Getting started with OCHRE data
-Next lets start to work with OCHRE. Data is organized in OCHRE by uuid- you'll need to refer to the OCHRE backend to get a UUID to start with, but since I know one already you can use the following command to see what data is associated with it:
+Next lets start to work with OCHRE. Data is organized in OCHRE by uuid- you'll need to refer to the OCHRE backend to get a UUID to start with, but since I know one already you can use the following command in the terminal to see what data is associated with it:
 
 ```console
 $ curl http://ochre.lib.uchicago.edu/ochre?uuid=0ad43a89-09d6-4292-88cb-b6fd6dfe41e5 | xmllint --format - | less
