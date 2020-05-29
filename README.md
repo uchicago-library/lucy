@@ -153,7 +153,8 @@ $ python hello.py
                        Chéen beyaʾ. (So-so.)
 ```
 
-Now lets create a minimal flask app to serve this content up in a web server. Flask is one of my favorite tools for making websites quickly. Start by using pip to install the flask package into your virtual environment:
+## Creating a minimal Flask app
+Now lets create a simple flask app to serve this content up in a web server. Start by using pip to install the flask package into your virtual environment:
 
 ```console
 $ pip install flask
