@@ -80,6 +80,7 @@ def main():
 if __name__=='__main__':
     main()
 ```
+In the script above, I use the Python `urllib` module to request data from OCHRE&mdash;it's one way to request a URL, the way you might do it with a web browser or with the `curl` command in the terminal. That function returns a string which I use to instantiate an `ElementTree` object so I can manipulate the XML. Then I loop over `<section>` elements in that XML using the ElementTree's `findall` method. This is just a skeleton we can expand once we're sure that we can get at our data, and that our XPath is correct, etc.  
 
 Running this script, you should see something like this:
 
@@ -96,7 +97,7 @@ $ python hello.py
 (output truncated)
 ```
 
-Next, we'll want to get the speaker names, transcriptions, and translations. For the time being I'll format them to look something like a screenplay, just for fun. Once we've got this running on a web server we can add static content like CSS for better styling. Extend your script like this:
+Next, we'll want to get the speaker names, transcriptions, and translations. I'll format them to look something like a screenplay for the time being. That will let us look at more of the data, to be sure we're able to extract it from the XML without any trouble, and it will make a relatively complete, but short example. Modify your script like this:
 
 ```python
 import urllib.request
@@ -156,7 +157,7 @@ Now lets create a simple flask app to serve this content up in a web server. Sta
 $ pip install flask
 ```
 
-Then, copy the following Python code into a new file to create a minimal flask app. I'll call that file minimal.py:
+Then, copy the following Python code into a new file to create a minimal flask app. I'll call that file main.py:
 
 ```python
 from flask import Flask
@@ -173,10 +174,12 @@ if __name__=='__main__':
 Now run a development version of your new Flask app like this:
 
 ```console
-$ python minimal.py
+$ python main.py
 ```
 
-Flask's development server will then start serving your Flask site at [http://localhost:5000/](http://localhost:5000/). Flask will warn you that it's running a server meant for development only&mdash;later on we'll set up a simple WGSI server so you can get a bit closer to what this will look like in  a production environment. Opening this URL in your browser should show a plain text message, "Hello from Flask."
+Flask's development server will then start serving your Flask site at [http://localhost:5000/](http://localhost:5000/). Flask will warn you that it's running a server meant for development only&mdash;later on we'll set up a simple production server so you can get a bit closer to what this will look like in  a production environment. But for now, open this URL in your browser to see a plain text message, "Hello from Flask."
+
+# Extending our minimal Flask app to return text from OCHRE
 
 Lets extend that so it can return our screenplay-formatted text.
 
@@ -201,18 +204,12 @@ def main():
         'xq': 'http://namespaces.softwareag.com/tamino/XQuery/result'
     }): 
         try:
-            speaker = section.find(
-                './/property/label[@uuid="9dc5fbbe-b8db-417f-b9d4-68efa3576e80"]/../value'
-            ).text
-            translation = section.find('./translation/content').text
-            transcription = section.find('./transcription/content').text
-
             sections.append('{:<35}{}\n{:<23}{} ({})\n'.format(
                 '', 
-                speaker.upper(),
+                section.find('.//property/label[@uuid="9dc5fbbe-b8db-417f-b9d4-68efa3576e80"]/../value).text.upper(),
                 '', 
-                transcription,
-                translation
+                section.find('./transcription/content').text,
+                section.find('./translation/content').text
             ))  
         except AttributeError:
             pass
@@ -223,9 +220,11 @@ if __name__=='__main__':
     app.run(host="0.0.0.0", port=5000)
 ```
 
-This should return the correct text to your browser, but without the right newlines or anything like that. Lets add templates so that we can return something more nicely formatted. 
+This should return the correct text to your browser, but without the right newlines or anything like that. You'll see the correclty formatted text if you view the source of the page, but lets add templates so that we can return something that will render properly as HTML.
 
-Finally, lets add templates to return this as HTML. Instead of sending a mass of text to the templates, we'll start by making a data structure to send. Instead of joining my sections list into a single string, I'll set each item in the list to it's own python dictionary with three keys&mdash;speaker, translation, and transcription. Then I'll loop over them in the  template to display them properly. 
+# Adding HTML templates to your Flask app
+
+We'll start by making a data structure to send. Instead of joining my sections list into a single string, I'll set each item in the list to it's own python dictionary with three keys&mdash;speaker, translation, and transcription. Then I'll loop over them in the  template to display them properly. 
 
 Modify your main.py so it looks like this:
 
@@ -302,7 +301,7 @@ Then, create a directory called "templates" next to your main.py file. Inside th
 </html>
 ```
 
-Now if you run main.py, you should see something that looks vaguely like a screenplay, at least on a desktop browser. 
+Now if you run main.py, you should see something that looks vaguely like a screenplay on a desktop browser. 
 
 # Docker?
 
