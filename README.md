@@ -180,7 +180,7 @@ Now run a development version of your new Flask app like this:
 $ python minimal.py
 ```
 
-Flask's development server will then start serving your Flask site on localhost at (http://localhost:5000/)[http://localhost:5000/]. Flask will warn you that it's running a server meant for development only&mdash;later on we'll set up a simple WGSI server so you can get a bit closer to what this will look like in  a production environment. Opening this URL in your browser should show a plain text message, "Hello from Flask."
+Flask's development server will then start serving your Flask site at [http://localhost:5000/](http://localhost:5000/). Flask will warn you that it's running a server meant for development only&mdash;later on we'll set up a simple WGSI server so you can get a bit closer to what this will look like in  a production environment. Opening this URL in your browser should show a plain text message, "Hello from Flask."
 
 Lets extend that so it can return our screenplay-formatted text.
 
