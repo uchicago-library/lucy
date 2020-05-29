@@ -113,18 +113,14 @@ def main():
         'xq': 'http://namespaces.softwareag.com/tamino/XQuery/result'
     }): 
         try:
-            speaker = section.find(
-                './/property/label[@uuid="9dc5fbbe-b8db-417f-b9d4-68efa3576e80"]/../value'
-            ).text
-            translation = section.find('./translation/content').text
-            transcription = section.find('./transcription/content').text
-
             print('{:<35}{}\n{:<23}{} ({})\n'.format(
                 '', 
-                speaker.upper(),
+                section.find(
+                    './/property/label[@uuid="9dc5fbbe-b8db-417f-b9d4-68efa3576e80"]/../value'
+                ).text.upper(),
                 '', 
-                transcription,
-                translation
+                section.find('./transcription/content').text,
+                section.find('./translation/content').text
             ))  
         except AttributeError:
             pass
