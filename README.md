@@ -45,7 +45,7 @@ We can represent that in XPath as:
 /ino:response/xq:result/ochre/text/discourseHierarchy/section
 ```
 
-There are lots of different XML packages in Python- to keep things simple I'll use ElementTree. It uses a subset of XPath, so I'll write some expressions a bit differently than I would with other processors. Because ElementTree works from the root element, we'll modify that XPath so that it's relative to the root. 
+There are lots of different XML packages in Python- to keep things simple I'll use [ElementTree](https://docs.python.org/3/library/xml.etree.elementtree.html). It uses a subset of XPath, so I'll write some expressions a bit differently than I would with other processors. Because ElementTree works from the root element, we'll modify that XPath so that it's relative to the root. 
 
 ```xpath
 ./xq:result/ochre/text/discourseHierarchy/section
