@@ -11,11 +11,7 @@ The recordings themselves are valuable documents. Manuel J. Andrade was an anthr
 Fast-forwarding to 2005 brings us to the initial website for this project, when Professors John Lucy and John Goldsmith led a project to digitize this material and to develop metadata to describe them. In 2007 John Lucy led a project to create the initial web-based language instruction course based on this material which is now used by multiple universities. 
 
 ## This iteration of the site
-Last year OCHRE data services loaded the sound clips and their associated metadata into OCHRE. My task was to duplicate the 2007 website, but with a more modern web framework. Building off of OCHRE as a backend saved time and allowed me to work more quickly than I could have otherwise.
-
-Data management issues can become the most time-consuming part of a project like this, so software that has been specifically designed to manage data for cultural heritage materials is incredibly helpful.
-
-Because OCHRE reveals its data as XML, you have lots of choices for languages and frameworks for a frontend. I chose the Python language and the Flask framework because it's lightweight and quick for development. The following instructions were tested on a Mac- if you're working with a different OS you will have to modify them for your machine.
+Last year OCHRE data services loaded the sound clips and their associated metadata into OCHRE. My task was to duplicate the 2007 website, but with a more modern web framework. Because OCHRE reveals its data as XML, you have lots of choices for languages and frameworks for a frontend. I chose the Python language and the [Flask](https://flask.palletsprojects.com/en/1.1.x/) framework because it's lightweight and quick for development. The following instructions were tested on a Mac- if you're working with a different OS you will have to modify them for your machine.
 
 ## Getting started with OCHRE data
 Next lets start to work with OCHRE. Data is organized in OCHRE by uuid- you'll need to refer to the OCHRE backend to get a UUID to start with. A UUID for the Lucy project is 0ad43a89-09d6-4292-88cb-b6fd6dfe41e5. Run the following command to see what data is associated with that uuid:
