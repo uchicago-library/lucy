@@ -20,7 +20,7 @@ Next lets start to work with OCHRE. Data is organized in OCHRE by uuid- you'll n
 $ curl http://ochre.lib.uchicago.edu/ochre?uuid=0ad43a89-09d6-4292-88cb-b6fd6dfe41e5 | xmllint --format - | less
 ```
 
-This returns all of the exercises for lesson 1 on the Learning Yucatec Maya website- basic sentences, pronunciation, grammar, drills, listening in, conversation, vocabulary, etc. 
+This returns all of the exercises for lesson one of the Learning Yucatec Maya site- basic sentences, pronunciation, grammar, drills, listening in, conversation, vocabulary, etc. 
 
 If you haven't worked much with XML data you will probably want to start building a suite of tools that are appropriate for different tasks, like [Oxygen](https://oxygenxml.com) for making edits, or [xmllint](http://xmlsoft.org/xmllint.html) for manipulating XML on the command line. 
 
