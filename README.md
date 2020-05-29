@@ -30,12 +30,14 @@ A fast way to start exploring XML data is to use a web browser that can format i
 ## Writing a script to format this data for display in the terminal
 This short command line script will display the dialog for lesson one's basic sentences. First, we'll need to figure out an [XPath](https://www.w3.org/TR/1999/REC-xpath-19991116/) that can get us to this part of the document. Looking at the hierarchy in Safari, I can see that we followed this trail of elements like this to get to our list of sections:
 
+```html
 <ino:response>
   <xq:result>
     <ochre>
       <text>
         <discurseHierarchy>
           <section>
+```
 
 We can represent that in XPath as:
 
