@@ -1,4 +1,4 @@
-# Using OCHRE as the backend for a Yucatec Mayan language instruction website
+# Using OCHRE as the backend for the Learning Yucatec Maya website
 These notes are about using OCHRE as a website backend for the [Learning Yucatec Maya website](https://lucy.lib.uchicago.edu/) at the University of Chicago. OCHRE is the Online Cultural and Historical Research Environment; produced by [OCHRE Data Services](https://oi.uchicago.edu/research/ochre-data-service) at the Oriental Institute, it's software to "record, integrate, analyze, publish, and preserve cultural and historical information in all of its digital forms." 
 
 OCHRE provides an interface to manage complex semi-structured data. Because of the richness of this kind of data, it can be helpful as a website backend, since so much of the time of developing a site around that material can go towards data management issues. By providing an API that exposes its data as XML, OCHRE can serve as a backend for website frontends written in whatever language and framework you like. 
