@@ -20,11 +20,11 @@ Next lets start to work with OCHRE. Data is organized in OCHRE by uuid- you'll n
 $ curl http://ochre.lib.uchicago.edu/ochre?uuid=0ad43a89-09d6-4292-88cb-b6fd6dfe41e5 | xmllint --format - | less
 ```
 
-This returns all of the exercises for lesson one of the Learning Yucatec Maya site- basic sentences, pronunciation, grammar, drills, listening in, conversation, vocabulary, etc. 
-
-If you haven't worked much with XML data you will probably want to start building a suite of tools that are appropriate for different tasks, like [Oxygen](https://oxygenxml.com) for making edits, or [xmllint](http://xmlsoft.org/xmllint.html) for validating and manipulating XML on the command line. 
+This returns all of the exercises for lesson one of the Learning Yucatec Maya site- basic sentences, pronunciation, grammar, drills, listening in, conversation, vocabulary, etc.  
 
 ## Using Safari as a quick tool to explore XML data
+If you haven't worked much with XML data you will probably want to start building a suite of tools that are appropriate for different tasks, like [Oxygen](https://oxygenxml.com) for making edits, or [xmllint](http://xmlsoft.org/xmllint.html) for validating and manipulating XML on the command line.
+
 A fast way to start exploring XML data is to use a web browser that can format it with expandable and collapsable sections. On my mac I can open [http://ochre.lib.uchicago.edu/ochre?uuid=0ad43a89-09d6-4292-88cb-b6fd6dfe41e5](http://ochre.lib.uchicago.edu/ochre?uuid=0ad43a89-09d6-4292-88cb-b6fd6dfe41e5) in Safari to do this. Control-click anywhere in the page and select "Show Page Source". The web inspector will appear- be sure you're on the Sources tab, and click the root element (Response, in this case.) Select the DOM Tree option to get an easy to navigate view of this XML document. Click the <xq:result> element to open that part of the DOM tree, and then click <ochre>, <text>, and finally <discourseHierarchy>. There we can see a <section> for each sentence in Basic Sentences. Clicking the first <section> element reveals <transcription> and <translation> elements. If you open up <translation> you can see a <content> element that includes the text "Hi there, brother!" This is the first sentence of this part of lesson one.
     
 ## Writing a script to format this data for display in the terminal
