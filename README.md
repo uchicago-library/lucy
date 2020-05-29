@@ -41,11 +41,15 @@ This short command line script will display the dialog for lesson one's basic se
 
 We can represent that in XPath as:
 
+```xpath
 /ino:response/xq:result/ochre/text/discourseHierarchy/section
+```
 
 There are lots of different XML packages in Python- to keep things simple I'll use ElementTree. It uses a subset of XPath, so I'll write some expressions a bit differently than I would with other processors. Because ElementTree works from the root element, we'll modify that XPath so that it's relative to the root. 
 
+```xpath
 ./xq:result/ochre/text/discourseHierarchy/section
+```
 
 To write our command line script, I'll set up a Python virtual environment  for any modules we'll need, and I'll start by installing requests to request our OCHRE data over http.
 
