@@ -393,7 +393,7 @@ Start the docker daemon, and build the project with the following command:
 
 ```console
 $ docker build -t hello .
-$ docker run -p 8000:80 -t hello
+$ docker run -p 8000:80 hello
 ```
 
 Now if you open your browser to http://localhost:8000 you'll be able to see it with the correct fonts.  Going into more detail about the pieces of this Dockerfile is outside of the scope of this article, but using a setup like this you can do your development work on a local machine, using a setup that is very similar to what can end up on production. 
