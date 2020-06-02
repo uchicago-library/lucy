@@ -307,36 +307,95 @@ Now if you run main.py, you should see something that looks vaguely like a scree
 
 In order to serve static files it's probably best to set up a better development environment. We'll use Docker. Go to [the Docker website](https://docs.docker.com/get-docker/) to download a version that's appropriate for your computer. 
 
-Create a directory called "app", and move hello.py and the css and templates directories inside. Then create a file called Dockerfile next to the app directory, with the following contents:
+Create a directory called "srv", and move hello.py and the css and templates directories inside. Then create a file called Dockerfile next to the app directory, with the following contents:
 
 ```
-#UPDATE THIS LINE
-FROM tiangolo/uwsgi-nginx-flask:flask
+FROM httpd:2.4
 
-COPY ./app /app
+RUN useradd -m www
+
+RUN apt-get update
+RUN apt-get upgrade -y
+
+COPY srv /srv
+COPY lucy.conf /tmp/
+
+RUN apt-get install -y build-essential \
+                       libapache2-mod-wsgi \
+                       python-dev \
+                       python3-dev \
+                       python3-pip \
+                       python3-venv \
+                       python3.7 \
+                       wget
+
+RUN mkdir /tmp/src
+WORKDIR /tmp/src
+RUN wget https://github.com/GrahamDumpleton/mod_wsgi/archive/4.7.1.tar.gz
+RUN tar xvfz 4.7.1.tar.gz
+
+WORKDIR /tmp/src/mod_wsgi-4.7.1/
+RUN ./configure
+RUN make
+RUN make install
+
+ENV VIRTUAL_ENV=/env
+RUN python3 -m venv $VIRTUAL_ENV
+ENV PATH="$VIRTUAL_ENV/bin:$PATH"
+RUN pip install flask
+
+RUN cat /tmp/lucy.conf >> /usr/local/apache2/conf/httpd.conf
+```
+
+Create a file in srv called lucy.wsgi:
+
+```python
+import sys 
+sys.path.insert(0, '/srv')
+
+from lucy import app as application
+```
+
+Finally, create a file called lucy.conf with the following contents:
+
+```
+LoadModule wsgi_module modules/mod_wsgi.so
+
+<VirtualHost *>
+    ServerName localhost
+    WSGIScriptAlias / /srv/lucy.wsgi
+    WSGIDaemonProcess lucy python-path=/srv:/env/lib/python3.7/site-packages user=www group=www threads=5
+    WSGIProcessGroup lucy
+
+    <Directory /srv>
+        WSGIProcessGroup lucy
+        WSGIApplicationGroup %{GLOBAL}
+        Require all granted
+    </Directory>
+</VirtualHost>
 ```
 
 Your directory heirarchy should now look like this:
 
 ```
 Dockerfile
-app
+lucy.conf
+srv
     css
         base.css
     index.py
+    lucy.wsgi
     templates
         base.html
-env
-    (virtual environment stuff)
 ```
 
 Start the docker daemon, and build the project with the following command:
 
 ```console
 $ docker build -t hello .
-$ docker run -p 80:80 -t hello
+$ docker run -p 8000:80 -t hello
 ```
 
-Now if you open your browser to http://localhost:5000 you'll be able to see it with the correct fonts. 
+Now if you open your browser to http://localhost:8000 you'll be able to see it with the correct fonts.  Going into more detail about the pieces of this Dockerfile is outside of the scope of this article, but using a setup like this you can do your development work on a local machine, using a setup that is very similar to what can end up on production. 
 
 If you go to https://github.com/johnjung/lucy you can see production code for the site, extending the ideas here. 
