@@ -308,7 +308,7 @@ Then, create a directory called "templates" next to your main.py file. Inside th
 
 Now if you run main.py, you should see something that looks vaguely like a screenplay on a desktop browser. 
 
-# Using Docker for a development environment
+## Using Docker for a development environment
 
 In order to serve static files it's probably best to set up a better development environment. We'll use Docker. Go to [the Docker website](https://docs.docker.com/get-docker/) to download a version that's appropriate for your computer. 
 
