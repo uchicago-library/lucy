@@ -61,10 +61,9 @@ To write our command line script, I'll set up a Python virtual environment  for 
 ```console
 $ python3 -m venv env
 $ source env/bin/activate
-$ pip install request
 ```
 
-Now lets put those pieces together. Here is how to iterate over each section element in that data in Python:
+Now lets put those pieces together. Here is how to iterate over each section element in that data in Python. I'll call this example hello.py:
 
 ```python
 import urllib.request
@@ -102,7 +101,7 @@ $ python hello.py
 (output truncated)
 ```
 
-Next, we'll want to get the speaker names, transcriptions, and translations. I'll format them to look something like a screenplay for the time being. That will let us look at more of the data, to be sure we're able to extract it from the XML without any trouble, and it will make a relatively complete, but short example. Modify your script like this:
+Next, we'll want to get the speaker names, transcriptions, and translations. This will let us look at more of the data, to be sure we're able to extract it from the XML without any trouble. Modify your script like this:
 
 ```python
 import urllib.request
@@ -119,13 +118,14 @@ def main():
         'xq': 'http://namespaces.softwareag.com/tamino/XQuery/result'
     }): 
         try:
-            print('{:<35}{}\n{:<23}{} ({})\n'.format(
-                '', 
+            print('{:>15}{}\n{:>15}{}\n{:>15}{}\n'.format(
+                'Speaker: ',  
                 section.find(
                     './/property/label[@uuid="9dc5fbbe-b8db-417f-b9d4-68efa3576e80"]/../value'
-                ).text.upper(),
-                '', 
+                ).text,
+                'Transcription: ',
                 section.find('./transcription/content').text,
+                'Translation: ',
                 section.find('./translation/content').text
             ))  
         except AttributeError:
@@ -135,24 +135,37 @@ if __name__=='__main__':
     main()
 ```
 
-Running this script you should see...
+Running this script you should see:
 
 ```console
 $ python hello.py 
-                                   PEDRO
-                       ¡Hola, sukuʾun! (Hi there, brother!)
+      Speaker: Pedro
+Transcription: ¡Hola, sukuʾun!
+  Translation: Hi there, brother!
 
-                                   PEDRO
-                       Baʾax ka waʾalik teech. (What do you say?)
+      Speaker: Pedro
+Transcription: Baʾax ka waʾalik teech.
+  Translation: What do you say?
 
-                                   MARCELINO
-                       Mix baʾal. (Nothing!)
+      Speaker: Marcelino
+Transcription: Mix baʾal.
+  Translation: Nothing!
 
-                                   MARCELINO
-                       Kux teech. Bix a beel. (And you, how are you?)
+      Speaker: Marcelino
+Transcription: Kux teech. Bix a beel.
+  Translation: And you, how are you?
 
-                                   PEDRO
-                       Chéen beyaʾ. (So-so.)
+      Speaker: Pedro
+Transcription: Chéen beyaʾ.
+  Translation: So-so.
+
+      Speaker: Pedro
+Transcription: ¡Jach kiʾimak in wóol in wilikech!
+  Translation: Iʾm very happy to see you!
+
+      Speaker: Marcelino
+Transcription: Bey xan teen.
+  Translation: Me, too.
 ```
 
 ## Creating a Flask app for OCHRE
@@ -162,7 +175,7 @@ Now lets create a simple flask app to serve this content up in a web server. Sta
 $ pip install flask
 ```
 
-Then, copy the following Python code into a new file to create a minimal flask app. I'll call that file main.py:
+Then, copy the following Python code into a new file to create a minimal flask app. I'll call that file lucy.py:
 
 ```python
 from flask import Flask
@@ -179,7 +192,7 @@ if __name__=='__main__':
 Now run a development version of your new Flask app like this:
 
 ```console
-$ python main.py
+$ python lucy.py
 ```
 
 Flask's development server will then start serving your Flask site at [http://localhost:5000/](http://localhost:5000/). Flask will warn you that it's running a server meant for development only&mdash;later on we'll set up a simple production server so you can get a bit closer to what this will look like in  a production environment. But for now, open this URL in your browser to see a plain text message, "Hello from Flask."
@@ -209,13 +222,16 @@ def main():
         'xq': 'http://namespaces.softwareag.com/tamino/XQuery/result'
     }): 
         try:
-            sections.append('{:<35}{}\n{:<23}{} ({})\n'.format(
-                '', 
-                section.find('.//property/label[@uuid="9dc5fbbe-b8db-417f-b9d4-68efa3576e80"]/../value).text.upper(),
-                '', 
+            sections.append('{:>15}{}\n{:>15}{}\n{:>15}{}\n'.format(
+                'Speaker: ',  
+                section.find(
+                    './/property/label[@uuid="9dc5fbbe-b8db-417f-b9d4-68efa3576e80"]/../value'
+                ).text,
+                'Transcription: ',
                 section.find('./transcription/content').text,
+                'Translation: ',
                 section.find('./translation/content').text
-            ))  
+            ))   
         except AttributeError:
             pass
 
@@ -231,7 +247,7 @@ This should return the correct text to your browser, but without the right newli
 
 We'll start by making a data structure to send. Instead of joining my sections list into a single string, I'll set each item in the list to it's own python dictionary with three keys&mdash;speaker, translation, and transcription. Then I'll loop over them in the  template to display them properly. 
 
-Modify your main.py so it looks like this:
+Modify your lucy.py so it looks like this:
 
 ```python
 import urllib.request
@@ -273,7 +289,7 @@ if __name__=='__main__':
     app.run(host="0.0.0.0", port=5000)
 ```
 
-Then, create a directory called "templates" next to your main.py file. Inside that directory, make a file called base.html:
+Then, create a directory called "templates" next to your lucy.py file. Inside that directory, make a file called base.html:
 
 ```html
 <!doctype html>
@@ -283,34 +299,37 @@ Then, create a directory called "templates" next to your main.py file. Inside th
   <title>base template</title>
   <style>
     body {
-      font-family: courier, monospace;
-    }   
-    h2 {
-      font-size: 12pt;
-      font-weight: normal;
-      margin: 0 0 0 4in;
-      text-transform: uppercase;
-    }   
-    p { 
-      font-size: 12pt;
-      margin: 0 0 12pt 2.5in;
-    }   
+      font-family: Helvetica, sans-serif;
+    }
+    div#basic_sentences {
+      display: grid;
+      grid-template-columns: max-content 1fr 1fr;
+      grid-column-gap: 1em;
+      grid-row-gap: 1em;
+    }
   </style>
 </head>
 <body>
-{% for section in sections %}
-    <h2>{{ section.speaker }}</h2>
-    <p>{{ section.transcription }} ({{ section.transcription }})</p>
-{% endfor %}
+  <div id="basic_sentences">
+    {% for section in sections %}
+      <div>{{ section.speaker }}</div>
+      <div>{{ section.transcription }}</div>
+      <div>{{ section.transcription }}</div>
+    {% endfor %}
+  </div>
 </body>
 </html>
 ```
 
-Now if you run main.py, you should see something that looks vaguely like a screenplay on a desktop browser. 
+Now if you run lucy.py, you should see the basic sentences for lesson one. 
 
 ## Using Docker for a development environment
 
-In order to serve static files it's probably best to set up a better development environment. We'll use Docker. Go to [the Docker website](https://docs.docker.com/get-docker/) to download a version that's appropriate for your computer. 
+Using Flask's built-in server works well for simple testing, but for most websites you'll need a setup that is a bit more complex. If nothing else, you'll want to separate out static files like CSS, JavaScript, or images, into their own subfolders. Although you can set up Flask to serve static content, you will be better off letting a web server like [NGINX](https://www.nginx.com/) or [Apache](https://www.apache.org/) do that. 
+
+Next we'll use Docker to set up a simple development that uses Apache and [mod_wsgi](https://modwsgi.readthedocs.io/en/develop/) to serve both your static files and your dynamic content via Flask. One of the advantages of doing this is that you can start to get your development environment to match your production environment more closely. Getting to that point is outside of scope of this document, and your specific production environment might require a different setup anyway. However, these steps should get you started. 
+
+Go to [the Docker website](https://docs.docker.com/get-docker/) to download a version that's appropriate for your computer. 
 
 Create a directory called "srv", and move hello.py and the css and templates directories inside. Then create a file called Dockerfile next to the app directory, with the following contents:
 
@@ -397,10 +416,8 @@ srv
 Start the docker daemon, and build the project with the following command:
 
 ```console
-$ docker build -t hello .
-$ docker run -p 8000:80 hello
+$ docker build -t lucy .
+$ docker run -p 8000:80 lucy
 ```
 
-Now if you open your browser to http://localhost:8000 you'll be able to see it with the correct fonts.  Going into more detail about the pieces of this Dockerfile is outside of the scope of this article, but using a setup like this you can do your development work on a local machine, using a setup that is very similar to what can end up on production. 
-
-If you go to https://github.com/johnjung/lucy you can see production code for the site, extending the ideas here. 
+Now if you open your browser to http://localhost:8000 you'll see that the site is correctly serving both static files and dynamic content. If you go to https://github.com/johnjung/lucy you can see production code for the site, which expands on the ideas here. 
