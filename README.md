@@ -174,7 +174,7 @@ Transcription: Bey xan teen.
 ```
 
 ## Creating a Flask app for OCHRE
-Now lets create a simple flask app to serve this content up in a web server. Start by using pip to install the flask package into your virtual environment:
+Now let's create a simple flask app to serve this content up in a web server. Start by using pip to install the flask package into your virtual environment:
 
 ```console
 $ pip install flask
@@ -204,7 +204,7 @@ Flask's development server will then start serving your Flask site at [http://lo
 
 ### Extending our Flask app with OCHRE
 
-Lets extend lucy.py so it can return some data about lesson one:
+Let's extend lucy.py so it can return some data about lesson one:
 
 ```python
 import urllib.request
