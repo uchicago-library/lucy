@@ -8,7 +8,6 @@ The Learning Yucatec Maya site a web-based course to teach field researchers Yuc
 1. [A short history of this project](#a-short-history-of-this-project)
 2. [Getting started with OCHRE data](#getting-started-with-ochre-data)
 3. [Creating a Flask app for OCHRE](#creating-a-flask-app-for-ochre)
-4. [Using Docker for a development environment](#using-docker-for-a-development-environment)
 
 ## A short history of this project
 The recordings themselves are valuable documents. Manuel J. Andrade was an anthropologist and linguist who did innovative audio recordings for linguistic fieldwork on the Mayan languages of Mexico and Guatemala. He recorded many of the earliest clips that are represented in today's site. Norman A. McQuown joined the faculty of the university in 1946, and he worked to conserve these recordings. When he co-founded the Language Laboratories and Archives in 1954 he incorporated these recordings into that collection. He developed courses on language instruction based on these materials, which led to "historicall deep, regionally broad, and ethnographically contextualized collections of recordings, papers, and pedagogical materials."
@@ -199,7 +198,7 @@ Flask's development server will then start serving your Flask site at [http://lo
 
 ### Extending our Flask app with OCHRE
 
-Lets extend that so it can return our screenplay-formatted text.
+Lets extend lucy.py so it can return some data about lesson one.
 
 ```python
 import urllib.request
@@ -325,78 +324,10 @@ Now if you run lucy.py, you should see the basic sentences for lesson one.
 
 ## Using Docker for a development environment
 
-Using Flask's built-in server works well for simple testing, but for most websites you'll need a setup that is a bit more complex. If nothing else, you'll want to separate out static files like CSS, JavaScript, or images, into their own subfolders. Although you can set up Flask to serve static content, you will be better off letting a web server like [NGINX](https://www.nginx.com/) or [Apache](https://www.apache.org/) do that. 
-
-Next we'll use Docker to set up a simple development that uses Apache and [mod_wsgi](https://modwsgi.readthedocs.io/en/develop/) to serve both your static files and your dynamic content via Flask. One of the advantages of doing this is that you can start to get your development environment to match your production environment more closely. Getting to that point is outside of scope of this document, and your specific production environment might require a different setup anyway. However, these steps should get you started. 
-
-Go to [the Docker website](https://docs.docker.com/get-docker/) to download a version that's appropriate for your computer. 
-
-Create a directory called "srv", and move hello.py and the css and templates directories inside. Then create a file called Dockerfile next to the app directory, with the following contents:
-
-```
-FROM httpd:2.4
-
-RUN useradd -m www
-
-RUN apt-get update
-RUN apt-get upgrade -y
-
-COPY srv /srv
-COPY lucy.conf /tmp/
-
-RUN apt-get install -y build-essential \
-                       libapache2-mod-wsgi \
-                       python-dev \
-                       python3-dev \
-                       python3-pip \
-                       python3-venv \
-                       python3.7 \
-                       wget
-
-RUN mkdir /tmp/src
-WORKDIR /tmp/src
-RUN wget https://github.com/GrahamDumpleton/mod_wsgi/archive/4.7.1.tar.gz
-RUN tar xvfz 4.7.1.tar.gz
-
-WORKDIR /tmp/src/mod_wsgi-4.7.1/
-RUN ./configure
-RUN make
-RUN make install
-
-ENV VIRTUAL_ENV=/env
-RUN python3 -m venv $VIRTUAL_ENV
-ENV PATH="$VIRTUAL_ENV/bin:$PATH"
-RUN pip install flask
-
-RUN cat /tmp/lucy.conf >> /usr/local/apache2/conf/httpd.conf
-```
-
-Create a file in srv called lucy.wsgi:
+Create a one-line file called lucy.wsgi:
 
 ```python
-import sys 
-sys.path.insert(0, '/srv')
-
 from lucy import app as application
-```
-
-Finally, create a file called lucy.conf with the following contents:
-
-```
-LoadModule wsgi_module modules/mod_wsgi.so
-
-<VirtualHost *>
-    ServerName localhost
-    WSGIScriptAlias / /srv/lucy.wsgi
-    WSGIDaemonProcess lucy python-path=/srv:/env/lib/python3.7/site-packages user=www group=www threads=5
-    WSGIProcessGroup lucy
-
-    <Directory /srv>
-        WSGIProcessGroup lucy
-        WSGIApplicationGroup %{GLOBAL}
-        Require all granted
-    </Directory>
-</VirtualHost>
 ```
 
 ```css
@@ -417,7 +348,7 @@ div#basic_sentences {
 <head>
   <meta charset="utf-8">
   <title>base template</title>
-  <link href="/css/lucy.css" rel="stylesheet" type= text/css">
+  <link href="/css/lucy.css" rel="stylesheet" type="text/css">
 </head>
 <body>
   <div id="basic_sentences">
@@ -434,22 +365,27 @@ div#basic_sentences {
 Your directory heirarchy should now look like this:
 
 ```
-Dockerfile
-lucy.conf
-srv
-    css
-        base.css
-    index.py
-    lucy.wsgi
-    templates
-        base.html
+css
+    base.css
+lucy.py
+lucy.wsgi
+templates
+    base.html
 ```
 
-Start the docker daemon, and build the project with the following command:
+Finally, we'll want to switch from the built-in Flask server to something that can also serve static files like CSS. We'll use the [mod-wsgi Python package](https://pypi.org/project/mod-wsgi/) to do that. Inside your Python virtual environment, run the following commands:
 
 ```console
-$ docker build -t lucy .
-$ docker run -p 8000:80 lucy
+$ pip install mod_wsgi-httpd
+$ pip install mod_wsgi
 ```
 
-Now if you open your browser to http://localhost:8000 you'll see that the site is correctly serving both static files and dynamic content. If you go to https://github.com/johnjung/lucy you can see production code for the site, which expands on the ideas here. 
+This will install a copy of Apache into your virtual environment, along with a handy command for running an Apache server with WSGI for your Flask app. Run your test server with the following command:
+
+```console
+$ mod_wsgi-express start-server --url-alias /css css lucy.wsgi
+```
+
+Now if you open your browser to http://localhost:8000 you'll see that the site should be correctly serving both static files and dynamic content. Please note: I ran into some trouble doing this with the default Python 3.7 on my mac. This seems to be a common issue based on the GitHub page for mod_wsgi-express, but installing Python 3.8 via Homebrew and using that version worked around that problem. 
+
+If you go to https://github.com/johnjung/lucy you can see production code for the site, which expands on the ideas here. 
