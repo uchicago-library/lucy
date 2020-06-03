@@ -399,6 +399,38 @@ LoadModule wsgi_module modules/mod_wsgi.so
 </VirtualHost>
 ```
 
+```css
+body {
+  font-family: Helvetica, sans-serif;
+}
+div#basic_sentences {
+  display: grid;
+  grid-template-columns: max-content 1fr 1fr;
+  grid-column-gap: 1em;
+  grid-row-gap: 1em;
+}
+```
+
+```html
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>base template</title>
+  <link href="/css/lucy.css" rel="stylesheet" type= text/css">
+</head>
+<body>
+  <div id="basic_sentences">
+    {% for section in sections %}
+      <div>{{ section.speaker }}</div>
+      <div>{{ section.transcription }}</div>
+      <div>{{ section.transcription }}</div>
+    {% endfor %}
+  </div>
+</body>
+</html>
+```
+
 Your directory heirarchy should now look like this:
 
 ```
