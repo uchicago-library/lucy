@@ -256,7 +256,7 @@ This should return the correct text to your browser, but without the right newli
 
 ### Adding templates to Flask
 
-We'll start by making a data structure to send. Instead of joining my sections list into a single string, I'll set each item in the list to it's own python dictionary with three keys&mdash;speaker, translation, and transcription. Then I'll loop over them in the  template to display them properly. 
+We'll start by making a data structure to send. Instead of joining my sections list into a single string, I'll set each item in the list to its own python dictionary with three keys&mdash;speaker, translation, and transcription. Then I'll loop over them in the  template to display them properly. 
 
 Modify your lucy.py so it looks like this:
 
