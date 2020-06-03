@@ -5,12 +5,17 @@ OCHRE provides an interface to manage complex semi-structured data for cultural 
 
 The Learning Yucatec Maya site a web-based course to teach field researchers Yucatec Maya. It contains digitized sound clips from field recordings of native speakers that date back to the 1920's. That content is divided among 18 lessons which take the learner through a series of drills, quizzes, vocabulary lists, conversation prompts and more. 
 
+1. [A short history of this project](#a-short-history-of-this-project)
+2. [Getting started with OCHRE data](#getting-started-with-ochre-data)
+3. [Creating a Flask app for OCHRE](#creating-a-flask-app-for-ochre)
+4. [Using Docker for a development environment](#using-docker-for-a-development-environment)
+
 ## A short history of this project
 The recordings themselves are valuable documents. Manuel J. Andrade was an anthropologist and linguist who did innovative audio recordings for linguistic fieldwork on the Mayan languages of Mexico and Guatemala. He recorded many of the earliest clips that are represented in today's site. Norman A. McQuown joined the faculty of the university in 1946, and he worked to conserve these recordings. When he co-founded the Language Laboratories and Archives in 1954 he incorporated these recordings into that collection. He developed courses on language instruction based on these materials, which led to "historicall deep, regionally broad, and ethnographically contextualized collections of recordings, papers, and pedagogical materials."
 
 Fast-forwarding to 2005 brings us to the initial website for this project, when Professors John Lucy and John Goldsmith led a project to digitize this material and to develop metadata to describe them. In 2007 John Lucy led a project to create the initial web-based language instruction course based on this material which is now used by multiple universities. 
 
-## This iteration of the site
+### This iteration of the site
 Last year OCHRE data services loaded the sound clips and their associated metadata into OCHRE. My task was to duplicate the 2007 website, but with a more modern web framework. Because OCHRE reveals its data as XML, you have lots of choices for languages and frameworks for a frontend. I chose the Python language and the [Flask](https://flask.palletsprojects.com/en/1.1.x/) framework because it's lightweight and quick for development. The following instructions were tested on a Mac&mdash;if you're working with a different OS you will have to modify them for your machine.
 
 ## Getting started with OCHRE data
@@ -22,12 +27,12 @@ $ curl http://ochre.lib.uchicago.edu/ochre?uuid=0ad43a89-09d6-4292-88cb-b6fd6dfe
 
 This returns all of the exercises for lesson one of the Learning Yucatec Maya site- basic sentences, pronunciation, grammar, drills, listening in, conversation, vocabulary, etc.  
 
-## Using Safari as a quick tool to explore XML data
+### Using Safari as a quick tool to explore XML data
 If you haven't worked much with XML data you will probably want to start building a suite of tools that are appropriate for different tasks, like [Oxygen](https://oxygenxml.com) for making edits, or [xmllint](http://xmlsoft.org/xmllint.html) for validating and manipulating XML on the command line.
 
 A fast way to start exploring XML data is to use a web browser that can format it with expandable and collapsable sections. On my mac I can open [http://ochre.lib.uchicago.edu/ochre?uuid=0ad43a89-09d6-4292-88cb-b6fd6dfe41e5](http://ochre.lib.uchicago.edu/ochre?uuid=0ad43a89-09d6-4292-88cb-b6fd6dfe41e5) in Safari to do this. Control-click anywhere in the page and select "Show Page Source". The web inspector will appear- be sure you're on the Sources tab, and click the root element (Response, in this case.) Select the DOM Tree option to get an easy to navigate view of this XML document. Click the `<xq:result>` element to open that part of the DOM tree, and then click `<ochre>`, `<text>`, and finally `<discourseHierarchy>`. There we can see a `<section>` for each sentence in Basic Sentences. Clicking the first `<section>` element reveals `<transcription>` and `<translation>` elements. If you open up `<translation>` you can see a `<content>` element that includes the text "Hi there, brother!" This is the first sentence of this part of lesson one.
     
-## Writing a script to format this data for display in the terminal
+### A terminal script for OCHRE data
 This short command line script will display the dialog for lesson one's basic sentences. First, we'll need to figure out an [XPath](https://www.w3.org/TR/1999/REC-xpath-19991116/) that can get us to this part of the document. Looking at the hierarchy in Safari, I can see that we followed this trail of elements like this to get to our list of sections:
 
 ```html
@@ -150,7 +155,7 @@ $ python hello.py
                        Chéen beyaʾ. (So-so.)
 ```
 
-## Creating a minimal Flask app
+## Creating a Flask app for OCHRE
 Now lets create a simple flask app to serve this content up in a web server. Start by using pip to install the flask package into your virtual environment:
 
 ```console
@@ -179,7 +184,7 @@ $ python main.py
 
 Flask's development server will then start serving your Flask site at [http://localhost:5000/](http://localhost:5000/). Flask will warn you that it's running a server meant for development only&mdash;later on we'll set up a simple production server so you can get a bit closer to what this will look like in  a production environment. But for now, open this URL in your browser to see a plain text message, "Hello from Flask."
 
-# Extending our minimal Flask app to return text from OCHRE
+### Extending our Flask app with OCHRE
 
 Lets extend that so it can return our screenplay-formatted text.
 
@@ -222,7 +227,7 @@ if __name__=='__main__':
 
 This should return the correct text to your browser, but without the right newlines or anything like that. You'll see the correclty formatted text if you view the source of the page, but lets add templates so that we can return something that will render properly as HTML.
 
-# Adding HTML templates to your Flask app
+### Adding templates to Flask
 
 We'll start by making a data structure to send. Instead of joining my sections list into a single string, I'll set each item in the list to it's own python dictionary with three keys&mdash;speaker, translation, and transcription. Then I'll loop over them in the  template to display them properly. 
 
@@ -303,7 +308,7 @@ Then, create a directory called "templates" next to your main.py file. Inside th
 
 Now if you run main.py, you should see something that looks vaguely like a screenplay on a desktop browser. 
 
-# Docker?
+# Using Docker for a development environment
 
 In order to serve static files it's probably best to set up a better development environment. We'll use Docker. Go to [the Docker website](https://docs.docker.com/get-docker/) to download a version that's appropriate for your computer. 
 
