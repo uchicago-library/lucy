@@ -59,11 +59,12 @@ To write our command line script, I'll set up a Python virtual environment for a
 
 ```console
 $ brew install python@3.8
-$ python3 -m venv env
+$ alias python=/usr/local/opt/python@3.8/bin/python3
+$ python -m venv env
 $ source env/bin/activate
 ```
 
-Now lets put those pieces together. Here is how to iterate over each section element in that data in Python. I'll call this example hello.py:
+You may need to modify the steps above for something more appropriate for your system. In any case, what we want to do is to install Python3 via Homebrew, and set it up so that you can easily run that version of Python instead of one of the others that is probably installed on your system. Now lets put those pieces together. Here is how to iterate over each section element in that data in Python. I'll call this example hello.py:
 
 ```python
 import urllib.request
