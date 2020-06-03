@@ -252,7 +252,7 @@ Use the built-in development server to see what this looks like:
 $ python lucy.py
 ```
 
-This should return the correct text to your browser, but without the right newlines or anything like that. If you view the source of the page you'll see the correctly formatted text&mdash;but lets add templates next so that we can return something that will render properly as HTML.
+This should return the correct text to your browser, but without the right newlines or anything like that. If you view the source of the page you'll see the correctly formatted text&mdash;but let's add templates next so that we can return something that will render properly as HTML.
 
 ### Adding templates to Flask
 
