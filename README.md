@@ -342,7 +342,7 @@ Finally, create a one-line file called lucy.wsgi and put it next to lucy.py:
 from lucy import app as application
 ```
 
-Your directory heirarchy should now look like this:
+Your directory hierarchy should now look like this:
 
 ```
 css
