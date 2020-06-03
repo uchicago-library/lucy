@@ -29,10 +29,10 @@ This returns all of the exercises for lesson one of the Learning Yucatec Maya si
 ### Using Safari as a quick tool to explore XML data
 If you haven't worked much with XML data you will probably want to start building a suite of tools that are appropriate for different tasks, like [Oxygen](https://oxygenxml.com) for making edits, or [xmllint](http://xmlsoft.org/xmllint.html) for validating and manipulating XML on the command line.
 
-A fast way to start exploring XML data is to use a web browser that can format it with expandable and collapsable sections. On my mac I can open [http://ochre.lib.uchicago.edu/ochre?uuid=0ad43a89-09d6-4292-88cb-b6fd6dfe41e5](http://ochre.lib.uchicago.edu/ochre?uuid=0ad43a89-09d6-4292-88cb-b6fd6dfe41e5) in Safari to do this. Control-click anywhere in the page and select "Show Page Source". The web inspector will appear- be sure you're on the Sources tab, and click the root element (Response, in this case.) Select the DOM Tree option to get an easy to navigate view of this XML document. Click the `<xq:result>` element to open that part of the DOM tree, and then click `<ochre>`, `<text>`, and finally `<discourseHierarchy>`. There we can see a `<section>` for each sentence in Basic Sentences. Clicking the first `<section>` element reveals `<transcription>` and `<translation>` elements. If you open up `<translation>` you can see a `<content>` element that includes the text "Hi there, brother!" This is the first sentence of this part of lesson one.
+A fast way to start exploring XML data is to use a web browser that can format it with expandable and collapsable sections. On my mac I can open [http://ochre.lib.uchicago.edu/ochre?uuid=0ad43a89-09d6-4292-88cb-b6fd6dfe41e5](http://ochre.lib.uchicago.edu/ochre?uuid=0ad43a89-09d6-4292-88cb-b6fd6dfe41e5) in Safari to do this. Control-click anywhere in the page and select "Show Page Source". The web inspector will appear- be sure you're on the Sources tab, and click the root element&mdash;Response, in this case. Select the DOM Tree option to get an easy to navigate view of this XML document. Click the `<xq:result>` element to open that part of the DOM tree, and then click `<ochre>`, `<text>`, and finally `<discourseHierarchy>`. There we can see a `<section>` for each sentence in Basic Sentences. Clicking the first `<section>` element reveals `<transcription>` and `<translation>` elements. If you open up `<translation>` you can see a `<content>` element that includes the text "Hi there, brother!" This is the first sentence of this part of lesson one.
     
 ### A terminal script for OCHRE data
-This short command line script will display the dialog for lesson one's basic sentences. First, we'll need to figure out an [XPath](https://www.w3.org/TR/1999/REC-xpath-19991116/) that can get us to this part of the document. Looking at the hierarchy in Safari, I can see that we followed this trail of elements like this to get to our list of sections:
+Now we'll write a short command line script to display the dialog for lesson one's basic sentences. First, we'll need to figure out an [XPath](https://www.w3.org/TR/1999/REC-xpath-19991116/) that can get us to this part of the document. Looking at the hierarchy in Safari, I can see that we followed this trail of elements like this to get to our list of sections:
 
 ```html
 <ino:response>
@@ -55,9 +55,10 @@ There are lots of different XML packages in Python&mdash;to keep things simple I
 ./xq:result/ochre/text/discourseHierarchy/section
 ```
 
-To write our command line script, I'll set up a Python virtual environment  for any modules we'll need, and I'll start by installing requests to request our OCHRE data over http.
+To write our command line script, I'll set up a Python virtual environment for any modules we'll need, and I'll start by installing requests to request our OCHRE data over http. I used Python 3 for these examples, so I'll start by using (Homebrew)[https://brew.sh] to install Python3.8.
 
 ```console
+$ brew install python@3.8
 $ python3 -m venv env
 $ source env/bin/activate
 ```
@@ -97,7 +98,7 @@ $ python hello.py
 <Element 'section' at 0x103d525f0>
 <Element 'section' at 0x103d61a10>
 <Element 'section' at 0x103d67dd0>
-(output truncated)
+...
 ```
 
 Next, we'll want to get the speaker names, transcriptions, and translations. This will let us look at more of the data, to be sure we're able to extract it from the XML without any trouble. Modify your script like this:
@@ -134,7 +135,7 @@ if __name__=='__main__':
     main()
 ```
 
-Running this script you should see:
+The main difference in the script above is that I used Python's string formatting method to get nicely formatted output in the terminal. Running this script you should see:
 
 ```console
 $ python hello.py 
@@ -165,6 +166,7 @@ Transcription: ¡Jach kiʾimak in wóol in wilikech!
       Speaker: Marcelino
 Transcription: Bey xan teen.
   Translation: Me, too.
+...
 ```
 
 ## Creating a Flask app for OCHRE
@@ -188,17 +190,17 @@ if __name__=='__main__':
     app.run()
 ```
 
-Now run a development version of your new Flask app like this:
+In just a few lines of code, Flask routes a url (in this case, '/') to a specific function. In this case all our function does is return a short greeting. Now run a development version of your new Flask app like this:
 
 ```console
 $ python lucy.py
 ```
 
-Flask's development server will then start serving your Flask site at [http://localhost:5000/](http://localhost:5000/). Flask will warn you that it's running a server meant for development only&mdash;later on we'll set up a simple production server so you can get a bit closer to what this will look like in  a production environment. But for now, open this URL in your browser to see a plain text message, "Hello from Flask."
+Flask's development server will then start serving your Flask site at [http://localhost:5000/](http://localhost:5000/). Flask will warn you that it's running a server meant for development only&mdash;you'll want to set up something more robust for a production environment. But for now, open this URL in your browser to see a plain text message, "Hello from Flask."
 
 ### Extending our Flask app with OCHRE
 
-Lets extend lucy.py so it can return some data about lesson one.
+Lets extend lucy.py so it can return some data about lesson one:
 
 ```python
 import urllib.request
@@ -240,7 +242,13 @@ if __name__=='__main__':
     app.run(host="0.0.0.0", port=5000)
 ```
 
-This should return the correct text to your browser, but without the right newlines or anything like that. You'll see the correclty formatted text if you view the source of the page, but lets add templates so that we can return something that will render properly as HTML.
+Use the built-in development server to see what this looks like:
+
+```console
+$ python lucy.py
+```
+
+This should return the correct text to your browser, but without the right newlines or anything like that. If you view the source of the page you'll see the correctly formatted text&mdash;but lets add templates next so that we can return something that will render properly as HTML.
 
 ### Adding templates to Flask
 
@@ -296,58 +304,6 @@ Then, create a directory called "templates" next to your lucy.py file. Inside th
 <head>
   <meta charset="utf-8">
   <title>base template</title>
-  <style>
-    body {
-      font-family: Helvetica, sans-serif;
-    }
-    div#basic_sentences {
-      display: grid;
-      grid-template-columns: max-content 1fr 1fr;
-      grid-column-gap: 1em;
-      grid-row-gap: 1em;
-    }
-  </style>
-</head>
-<body>
-  <div id="basic_sentences">
-    {% for section in sections %}
-      <div>{{ section.speaker }}</div>
-      <div>{{ section.transcription }}</div>
-      <div>{{ section.transcription }}</div>
-    {% endfor %}
-  </div>
-</body>
-</html>
-```
-
-Now if you run lucy.py, you should see the basic sentences for lesson one. 
-
-## Using Docker for a development environment
-
-Create a one-line file called lucy.wsgi:
-
-```python
-from lucy import app as application
-```
-
-```css
-body {
-  font-family: Helvetica, sans-serif;
-}
-div#basic_sentences {
-  display: grid;
-  grid-template-columns: max-content 1fr 1fr;
-  grid-column-gap: 1em;
-  grid-row-gap: 1em;
-}
-```
-
-```html
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <title>base template</title>
   <link href="/css/lucy.css" rel="stylesheet" type="text/css">
 </head>
 <body>
@@ -362,11 +318,31 @@ div#basic_sentences {
 </html>
 ```
 
+Create a one-line file called lucy.wsgi and put it next to lucy.py:
+
+```python
+from lucy import app as application
+```
+
+Finally, create a directory called `css` and inside it a file called `lucy.css`:
+
+```css
+body {
+  font-family: Helvetica, sans-serif;
+}
+div#basic_sentences {
+  display: grid;
+  grid-template-columns: max-content 1fr 1fr;
+  grid-column-gap: 1em;
+  grid-row-gap: 1em;
+}
+```
+
 Your directory heirarchy should now look like this:
 
 ```
 css
-    base.css
+    lucy.css
 lucy.py
 lucy.wsgi
 templates
@@ -386,6 +362,6 @@ This will install a copy of Apache into your virtual environment, along with a h
 $ mod_wsgi-express start-server --url-alias /css css lucy.wsgi
 ```
 
-Now if you open your browser to http://localhost:8000 you'll see that the site should be correctly serving both static files and dynamic content. Please note: I ran into some trouble doing this with the default Python 3.7 on my mac. This seems to be a common issue based on the GitHub page for mod_wsgi-express, but installing Python 3.8 via Homebrew and using that version worked around that problem. 
+Now if you open your browser to http://localhost:8000 you'll see that the site should be correctly serving both static files and dynamic content. Please note:  I ran into some trouble running mod_wsgi-express with the default Python 3.7 on my Mac. This seems to be a common issue based on the GitHub page for that software, but using Homebrew's Python3.8 worked around that problem. 
 
 If you go to https://github.com/johnjung/lucy you can see production code for the site, which expands on the ideas here. 
