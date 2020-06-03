@@ -1,4 +1,7 @@
 # Using OCHRE as the backend for Learning Yucatec Maya
+
+John Jung, Senior Programmer/Analyst, The University of Chicago Library
+
 These notes are about using OCHRE as a website backend for the [Learning Yucatec Maya website](https://lucy.lib.uchicago.edu/) at the University of Chicago. OCHRE is the Online Cultural and Historical Research Environment; produced by [OCHRE Data Services](https://oi.uchicago.edu/research/ochre-data-service) at the Oriental Institute, it is software to "record, integrate, analyze, publish, and preserve cultural and historical information in all of its digital forms." 
 
 OCHRE provides an interface to manage complex semi-structured data for cultural heritage and historical research. Because of the richness of this kind of data, this software can be helpful as a website backend, since so much development time for a site like this can go towards data management issues. By providing an API that exposes its data as XML, OCHRE can serve as a backend for website frontends written in whatever language and framework you like. 
@@ -319,13 +322,7 @@ Then, create a directory called "templates" next to your lucy.py file. Inside th
 </html>
 ```
 
-Create a one-line file called lucy.wsgi and put it next to lucy.py:
-
-```python
-from lucy import app as application
-```
-
-Finally, create a directory called `css` and inside it a file called `lucy.css`:
+Create a directory called `css` and inside it a file called `lucy.css`:
 
 ```css
 body {
@@ -339,6 +336,12 @@ div#basic_sentences {
 }
 ```
 
+Finally, create a one-line file called lucy.wsgi and put it next to lucy.py:
+
+```python
+from lucy import app as application
+```
+
 Your directory heirarchy should now look like this:
 
 ```
@@ -350,7 +353,7 @@ templates
     base.html
 ```
 
-Finally, we'll want to switch from the built-in Flask server to something that can also serve static files like CSS. We'll use the [mod-wsgi Python package](https://pypi.org/project/mod-wsgi/) to do that. Inside your Python virtual environment, run the following commands:
+Now we'll want to switch from the built-in Flask server to something that can also serve static files like CSS. We'll use the [mod-wsgi Python package](https://pypi.org/project/mod-wsgi/) to do that. Inside your Python virtual environment, run the following commands:
 
 ```console
 $ pip install mod_wsgi-httpd
@@ -365,4 +368,4 @@ $ mod_wsgi-express start-server --url-alias /css css lucy.wsgi
 
 Now if you open your browser to http://localhost:8000 you'll see that the site should be correctly serving both static files and dynamic content. Please note:  I ran into some trouble running mod_wsgi-express with the default Python 3.7 on my Mac. This seems to be a common issue based on the GitHub page for that software, but using Homebrew's Python3.8 worked around that problem. 
 
-If you go to https://github.com/johnjung/lucy you can see production code for the site, which expands on the ideas here. 
+If you go to https://github.com/johnjung/lucy you can see production code for the site, which expands on the ideas here. Please be sure to share the projects you make with OCHRE, I'm looking forward to seeing them. 
