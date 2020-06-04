@@ -368,4 +368,4 @@ $ mod_wsgi-express start-server --url-alias /css css lucy.wsgi
 
 Now if you open your browser to http://localhost:8000 you'll see that the site should be correctly serving both static files and dynamic content. Please note:  I ran into some trouble running mod_wsgi-express with the default Python 3.7 on my Mac. This seems to be a common issue based on the GitHub page for that software, but using Homebrew's Python3.8 worked around that problem. 
 
-If you go to https://github.com/johnjung/lucy you can see production code for the site, which expands on the ideas here. Please be sure to share the projects you make with OCHRE, I'm looking forward to seeing them. 
+If you go to (https://github.com/uchicago-library/lucy)[https://github.com/uchicago-library/lucy]you can see production code for the site, which expands on the ideas here. Please be sure to share the projects you make with OCHRE, I'm looking forward to seeing them. 
