@@ -24,7 +24,7 @@ Last year OCHRE data services loaded the sound clips and their associated metada
 Next let's start to work with OCHRE. Data is organized in OCHRE by uuid&mdash;you'll need to refer to the OCHRE backend to get a UUID to start with, but since I know one already you can use the following command in the terminal to see what data is associated with it:
 
 ```console
-$ curl http://ochre.lib.uchicago.edu/ochre?uuid=0ad43a89-09d6-4292-88cb-b6fd6dfe41e5 | xmllint --format - | less
+$ curl "http://ochre.lib.uchicago.edu/ochre?uuid=0ad43a89-09d6-4292-88cb-b6fd6dfe41e5" | xmllint --format - | less
 ```
 
 This returns all of the exercises for lesson one of the Learning Yucatec Maya site&mdash;basic sentences, pronunciation, grammar, drills, listening in, conversation, vocabulary, etc.  
