@@ -394,6 +394,6 @@ Now if you open your browser to http://localhost:8000 you'll see that the site s
 
 Please note:  I ran into some trouble running mod_wsgi-express with the default Python 3.7 on my Mac. This seems to be a common issue based on the GitHub page for that software, but using Homebrew's Python3.8 worked around that problem. 
 
-Now that you have a basic setup up and running, you can continue configuring other aspects of [Learning Yucatec Maya](https://lucy.lib.uchicago.edu) 
+Now that you have a basic setup up and running, you can continue configuring other aspects of [Learning Yucatec Maya](https://lucy.lib.uchicago.edu). Whenever you want to continue working, just run `source env\bin\activate` to reactivate your virtual environment, and use the `mod_wsgi-express` command to start your development server. 
 
 If you go to [https://github.com/uchicago-library/lucy](https://github.com/uchicago-library/lucy) you can see production code for the site, which expands on the ideas here. Please be sure to share the projects you make with OCHRE, I'm looking forward to seeing them. 
