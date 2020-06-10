@@ -302,7 +302,25 @@ if __name__=='__main__':
     app.run(host="0.0.0.0", port=5000)
 ```
 
-One of the changes in the script above is that we're now using the `render_template()` method. This will allow us to keep our code organized. We'll request data from OCHRE in Python, and turn it into a data structure that can be passed along to a template file. The `render_template()` method will take that data and pass it along to a template, where it can be inserted into HTML for display.  
+One of the changes in the script above is that we're now using the `render_template()` method. This will allow us to keep our code organized. We'll request data from OCHRE in Python, and turn it into a data structure that can be passed along to a template file. The `render_template()` method will take that data and pass it along to a template, where it can be inserted into HTML for display.
+
+It's worth thinking about the way you set this data structure up&mdash;as your site grows in complexity you will find yourself debugging it from the perspective of either the Python code where it is generated or the template code where it is consumed. In the script above I create a list of dictionaries, e.g.:
+
+```python
+[
+    {
+        'speaker': 'Pedro',
+        'transcription': '¡Hola, sukuʾun!',
+        'translation': 'Hi there, brother!'
+     },
+     {
+         'speaker': 'Pedro',
+         'transcription': 'Baʾax ka waʾalik teech.',
+         'translation': 'What do you say?'
+     },
+     ...
+]
+```
 
 To add a template to your project, create a directory called "templates" next to your lucy.py file. Inside that directory, make a file called base.html:
 
