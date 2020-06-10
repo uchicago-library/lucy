@@ -67,7 +67,7 @@ $ python -m venv env
 $ source env/bin/activate
 ```
 
-You may need to modify the steps above for something more appropriate for your system. In any case, what we want to do is to install Python3 via Homebrew, and set it up so that you can easily run that version of Python instead of one of the others that is probably installed on your system. `python -m venv env` is the command that sets up a virtual environment for a specific project&mdash;this lets you easily switch from one Python project to another, where each project can use its own version of Python and its own modules. You'll need to run `source env/bin/activate` to activate the virtual environment before running your code. You can use the `deactivate` command to exit the virtual environment for a project when you're ready to work on something else. 
+You may need to modify the steps above for something more appropriate for your system. In any case, what we want to do is to install Python3 via Homebrew, and set it up so that you can easily run that version of Python instead of one of the others that is probably installed on your system. `python -m venv env` is the command that sets up a virtual environment for a specific project&mdash;this lets you easily switch from one Python project to another, where each project can use its own version of Python and its own modules. You'll need to run `source env/bin/activate` to activate the virtual environment whenever you want to start working on your code. You can use the `deactivate` command to exit the virtual environment for a project when you're ready to work on something else. 
 
 Now lets put these pieces together. Here is how to iterate over each section element in that data in Python. I'll call this example hello.py:
 
