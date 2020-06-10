@@ -212,7 +212,7 @@ Let's extend lucy.py so it can return some data about lesson one:
 import urllib.request
 import xml.etree.ElementTree as ET
 
-from flask import Flask, render_template
+from flask import Flask
 app = Flask(__name__)
 
 @app.route('/')
@@ -302,7 +302,9 @@ if __name__=='__main__':
     app.run(host="0.0.0.0", port=5000)
 ```
 
-Then, create a directory called "templates" next to your lucy.py file. Inside that directory, make a file called base.html:
+One of the changes in the script above is that we're now using the `render_template()` method. This will allow us to keep our code organized. We'll request data from OCHRE in Python, and turn it into a data structure that can be passed along to a template file. The `render_template()` method will take that data and pass it along to a template, where it can be inserted into HTML for display.  
+
+To add a template to your project, create a directory called "templates" next to your lucy.py file. Inside that directory, make a file called base.html:
 
 ```html
 <!doctype html>
