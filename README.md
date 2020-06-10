@@ -58,7 +58,7 @@ There are lots of different XML packages in Python&mdash;to keep things simple I
 ./xq:result/ochre/text/discourseHierarchy/section
 ```
 
-To write our command line script, I'll set up a Python virtual environment for any modules we'll need, and I'll start by installing requests to request our OCHRE data over http. I used Python 3 for these examples, so I'll start by using (Homebrew)[https://brew.sh] to install Python3.8.
+To write our command line script, I'll set up a Python virtual environment for any modules we'll need, and I'll start by installing requests to request our OCHRE data over http. I used Python 3 for these examples, so I'll start by using [Homebrew](https://brew.sh) to install Python3.8.
 
 ```console
 $ brew install python@3.8
