@@ -368,6 +368,8 @@ This will install a copy of Apache into your virtual environment, along with a h
 $ mod_wsgi-express start-server --url-alias /css css lucy.wsgi
 ```
 
-Now if you open your browser to http://localhost:8000 you'll see that the site should be correctly serving both static files and dynamic content. Please note:  I ran into some trouble running mod_wsgi-express with the default Python 3.7 on my Mac. This seems to be a common issue based on the GitHub page for that software, but using Homebrew's Python3.8 worked around that problem. 
+Now if you open your browser to http://localhost:8000 you'll see that the site should be correctly serving both static files and dynamic content. Although you do not need to re-activate your virtual environment when you make changes to your code, you will need to restart the development server or at least `touch lucy.wsgi` any changes you make from here on to take effect.
+
+Please note:  I ran into some trouble running mod_wsgi-express with the default Python 3.7 on my Mac. This seems to be a common issue based on the GitHub page for that software, but using Homebrew's Python3.8 worked around that problem. 
 
 If you go to [https://github.com/uchicago-library/lucy](https://github.com/uchicago-library/lucy) you can see production code for the site, which expands on the ideas here. Please be sure to share the projects you make with OCHRE, I'm looking forward to seeing them. 
