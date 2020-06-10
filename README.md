@@ -176,7 +176,7 @@ Transcription: Bey xan teen.
 ```
 
 ## Creating a Flask app for OCHRE
-Now let's create a simple flask app to serve this content up in a web server. Start by using pip to install the flask package into your virtual environment:
+Now let's create a simple flask app to serve this content up in a web server. Be sure your virtual environment is activated&mdash;if you need to activate it you can do so by running `source env/bin/activate` in your project folder. Then use pip to install the flask package:
 
 ```console
 $ pip install flask
