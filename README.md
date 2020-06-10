@@ -336,13 +336,15 @@ To add a template to your project, create a directory called "templates" next to
   <div id="basic_sentences">
     {% for section in sections %}
       <div>{{ section.speaker }}</div>
-      <div>{{ section.transcription }}</div>
+      <div>{{ section.translation }}</div>
       <div>{{ section.transcription }}</div>
     {% endfor %}
   </div>
 </body>
 </html>
 ```
+
+In the template above, the `{% for section in sections %}...{% endfor %}` block is where we loop over our data structure to display the speaker, translation, and transcription for each sentence. 
 
 Create a directory called `css` and inside it a file called `lucy.css`:
 
@@ -382,7 +384,7 @@ $ pip install mod_wsgi-httpd
 $ pip install mod_wsgi
 ```
 
-This will install a copy of Apache into your virtual environment, along with a handy command for running an Apache server with WSGI for your Flask app. Run your test server with the following command:
+This will install a copy of Apache into your virtual environment, along with a handy command for running an Apache server with WSGI for your Flask app. Please be patient while installing Apache, as that part of the installation can take a while.  Run your test server with the following command:
 
 ```console
 $ mod_wsgi-express start-server --url-alias /css css lucy.wsgi
@@ -391,5 +393,7 @@ $ mod_wsgi-express start-server --url-alias /css css lucy.wsgi
 Now if you open your browser to http://localhost:8000 you'll see that the site should be correctly serving both static files and dynamic content. Although you do not need to re-activate your virtual environment when you make changes to your code, you will need to restart the development server or at least `touch lucy.wsgi` any changes you make from here on to take effect.
 
 Please note:  I ran into some trouble running mod_wsgi-express with the default Python 3.7 on my Mac. This seems to be a common issue based on the GitHub page for that software, but using Homebrew's Python3.8 worked around that problem. 
+
+Now that you have a basic setup up and running, you can continue configuring other aspects of [Learning Yucatec Maya](https://lucy.lib.uchicago.edu) 
 
 If you go to [https://github.com/uchicago-library/lucy](https://github.com/uchicago-library/lucy) you can see production code for the site, which expands on the ideas here. Please be sure to share the projects you make with OCHRE, I'm looking forward to seeing them. 
