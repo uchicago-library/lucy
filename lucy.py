@@ -89,7 +89,7 @@ class BasicSentences(Lucy):
         """ transcription """
         try:
             return {
-                'text': get_xml_contents(section.find('./transcription/content')),
+                'text': section.find('./transcription/content').text,
                 'uuid': section.find('./transcription/links/resource[@type="audio"]').get('uuid')
             }
         except AttributeError:
@@ -99,7 +99,7 @@ class BasicSentences(Lucy):
         """ translations """
         try:
             return {
-                'text': get_xml_contents(section.find('./translation/content')),
+                'text': section.find('./translation/content').text,
                 'uuid': section.find('./translation/links/resource[@type="audio"]').get('uuid')
             }
         except AttributeError:
@@ -110,7 +110,7 @@ class BasicSentences(Lucy):
         transcriptions = []
         for a in ('sup', 'pro'):
             try:
-                transcriptions.append(get_xml_contents(section.find('./transcription/content[@lang="' + a + '"]')))
+                transcriptions.append(section.find('./transcription/content[@lang="' + a + '"]').text)
             except AttributeError:
                 pass
         return transcriptions
