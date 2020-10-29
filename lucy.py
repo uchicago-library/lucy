@@ -146,7 +146,10 @@ class Pronunciations(Lucy):
         return notes
 
     def get_uuid(self, section):
-        return section.find('./links/resource[@type="audio"]').get('uuid')
+        try:
+            return section.find('./links/resource[@type="audio"]').get('uuid')
+        except AttributeError:
+            return ''
 
 
 class Grammar(Lucy):
