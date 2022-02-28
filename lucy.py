@@ -9,6 +9,7 @@ from flask import Flask, render_template, request
 from xml.sax.saxutils import unescape
 
 app = Flask(__name__)
+app.config.from_pyfile('config/local.py')
 
 def get_xml_contents(e):
     """Get the contents of a node as a string of text and XML 
@@ -170,7 +171,10 @@ class Grammar(Lucy):
         uuid = section.find('./links/resource').get('uuid')
         content_xml = ET.ElementTree(
             file=urllib.request.urlopen(
-                'http://ochre.lib.uchicago.edu/ochre?uuid={}'.format(uuid)
+                '{}/ochre?uuid={}'.format(
+                    app.config['OCHRE_SERVER'],
+                    uuid
+                )
             )
         )
         return content_xml.find('//document').text
@@ -511,7 +515,10 @@ def lucy():
 
     ochre_xml = ET.ElementTree(
         file=urllib.request.urlopen(
-            'http://ochre.lib.uchicago.edu/ochre?uuid={}'.format(uuid)
+            '{}/ochre?uuid={}'.format(
+                app.config['OCHRE_SERVER'],
+                uuid
+            )
         )
     )
 
