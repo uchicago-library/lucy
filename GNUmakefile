@@ -26,4 +26,4 @@ create-repo:
 
 .PHONY: clean
 clean:
-	$(RM) $(SETTINGS_PATH)/secrets.py || true
+	$(RM) $(SETTINGS_PATH)/local.py || true
